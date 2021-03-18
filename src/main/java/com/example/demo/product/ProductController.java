@@ -40,8 +40,18 @@ public class ProductController {
                 false,
                 true);
 
+        Product product3 = new Worktable(null,
+                "Cutting board",
+                new BigDecimal("45360.08"),
+                "Socket?",
+                "Why is it even string?",
+                false,
+                WorktableType.GRINDING_MACHINE,
+                TypeOfWork.HYDRAULIC);
+
         productRepository.addNewProduct(product1);
         productRepository.addNewProduct(product2);
+        productRepository.addNewProduct(product3);
 
         return productRepository.getAllProducts();
     }

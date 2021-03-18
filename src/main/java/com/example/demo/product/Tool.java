@@ -7,6 +7,12 @@ public class Tool extends Product {
     private boolean consumable;
     private boolean rechargeable;
 
+    public Tool(ToolType type, boolean consumable, boolean rechargeable) {
+        this.type = type;
+        this.consumable = consumable;
+        this.rechargeable = rechargeable;
+    }
+
     public Tool(Integer id,
                 String title,
                 BigDecimal price,
