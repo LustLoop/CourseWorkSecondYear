@@ -3,17 +3,18 @@ package com.example.demo.product;
 import java.math.BigDecimal;
 
 public class Worktable extends Product {
-    private boolean portable;
     private WorktableType worktableType;
     private TypeOfWork typeOfWork;
+    private boolean portable;
 
-    public Worktable(boolean portable, WorktableType worktableType, TypeOfWork typeOfWork) {
-        this.portable = portable;
-        this.worktableType = worktableType;
-        this.typeOfWork = typeOfWork;
-    }
-
-    public Worktable(Integer id, String title, BigDecimal price, String energyResource, String accuracy, boolean portable, WorktableType worktableType, TypeOfWork typeOfWork) {
+    public Worktable(Integer id,
+                     String title,
+                     BigDecimal price,
+                     String energyResource,
+                     String accuracy,
+                     WorktableType worktableType,
+                     TypeOfWork typeOfWork,
+                     boolean portable) {
         super(id, title, price, energyResource, accuracy);
         this.portable = portable;
         this.worktableType = worktableType;

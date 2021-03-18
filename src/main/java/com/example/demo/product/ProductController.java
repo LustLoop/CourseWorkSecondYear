@@ -20,8 +20,25 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    @GetMapping
-    public List<Product> getProducts() {
+    @RequestMapping
+    public List<Product> getAllProducts() {
+        return productRepository.getAllProducts();
+    }
+
+    @RequestMapping("/add")
+    public void addNewProduct(ProductInputDto productInputDto) {
+        if (productInputDto.getTypeOfProduct() == TypeOfProduct.TOOL)
+        {
+            Tool tool = productInputDto.convertToTool();
+            productRepository.addNewProduct(tool);
+        } else {
+            Worktable worktable = productInputDto.convertToWorktable();
+            productRepository.addNewProduct(worktable);
+        }
+    }
+
+    @GetMapping("/test")
+    public List<Product> test() {
         Product product1 = new Tool(null,
                 "Some kind of screwdriver",
                 new BigDecimal("800.08"),
@@ -45,9 +62,9 @@ public class ProductController {
                 new BigDecimal("45360.08"),
                 "Socket?",
                 "Why is it even string?",
-                false,
                 WorktableType.GRINDING_MACHINE,
-                TypeOfWork.HYDRAULIC);
+                TypeOfWork.HYDRAULIC,
+                false);
 
         productRepository.addNewProduct(product1);
         productRepository.addNewProduct(product2);

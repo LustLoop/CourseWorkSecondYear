@@ -3,36 +3,31 @@ package com.example.demo.product;
 import java.math.BigDecimal;
 
 public class Tool extends Product {
-    private ToolType type;
+    private ToolType toolType;
     private boolean consumable;
     private boolean rechargeable;
 
-    public Tool(ToolType type, boolean consumable, boolean rechargeable) {
-        this.type = type;
-        this.consumable = consumable;
-        this.rechargeable = rechargeable;
-    }
 
     public Tool(Integer id,
                 String title,
                 BigDecimal price,
                 String energyResource,
                 String accuracy,
-                ToolType type,
+                ToolType toolType,
                 boolean consumable,
                 boolean rechargeable) {
         super(id, title, price, energyResource, accuracy);
-        this.type = type;
+        this.toolType = toolType;
         this.consumable = consumable;
         this.rechargeable = rechargeable;
     }
 
-    public ToolType getType() {
-        return type;
+    public ToolType getToolType() {
+        return toolType;
     }
 
-    public void setType(ToolType type) {
-        this.type = type;
+    public void setToolType(ToolType toolType) {
+        this.toolType = toolType;
     }
 
     public boolean isConsumable() {
