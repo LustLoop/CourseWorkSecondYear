@@ -7,8 +7,15 @@ public class Tool extends Product {
     private boolean consumable;
     private boolean rechargeable;
 
-    public Tool(String title, BigDecimal price, String energyResource, String accuracy, ToolType type, boolean consumable, boolean rechargeable) {
-        super(title, price, energyResource, accuracy);
+    public Tool(Integer id,
+                String title,
+                BigDecimal price,
+                String energyResource,
+                String accuracy,
+                ToolType type,
+                boolean consumable,
+                boolean rechargeable) {
+        super(id, title, price, energyResource, accuracy);
         this.type = type;
         this.consumable = consumable;
         this.rechargeable = rechargeable;

@@ -3,6 +3,7 @@ package com.example.demo.product;
 import java.math.BigDecimal;
 
 public abstract class Product {
+    private Integer id;
     private String title;
     private BigDecimal price;
     private String energyResource;
@@ -11,11 +12,20 @@ public abstract class Product {
     public Product() {
     }
 
-    public Product(String title, BigDecimal price, String energyResource, String accuracy) {
+    public Product(Integer id, String title, BigDecimal price, String energyResource, String accuracy) {
+        this.id = id;
         this.title = title;
         this.price = price;
         this.energyResource = energyResource;
         this.accuracy = accuracy;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {

@@ -13,6 +13,6 @@ import java.math.BigDecimal;
 public class ProductController {
     @GetMapping
     public Product getProducts() {
-        return new Tool("Name", new BigDecimal("800.08"), "Battery", "80%", ToolType.OTHER,true, true);
+        return new Tool(null,"Name", new BigDecimal("800.08"), "Battery", "80%", ToolType.OTHER,true, true);
     }
 }
