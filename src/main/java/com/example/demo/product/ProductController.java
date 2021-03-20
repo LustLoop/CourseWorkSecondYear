@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @CrossOrigin
@@ -21,24 +22,17 @@ public class ProductController {
     }
 
     @RequestMapping
-    public List<Product> getAllProducts() {
+    public Collection<Product> getAllProducts() {
         return productRepository.getAllProducts();
     }
 
     @RequestMapping("/add")
     public void addNewProduct(ProductInputDto productInputDto) {
-        if (productInputDto.getTypeOfProduct() == TypeOfProduct.TOOL)
-        {
-            Tool tool = productInputDto.convertToTool();
-            productRepository.addNewProduct(tool);
-        } else {
-            Worktable worktable = productInputDto.convertToWorktable();
-            productRepository.addNewProduct(worktable);
-        }
+        productRepository.addNewProduct(productInputDto.convertToProduct());
     }
 
     @GetMapping("/test")
-    public List<Product> test() {
+    public Collection<Product> test() {
         Product product1 = new Tool(null,
                 "Some kind of screwdriver",
                 new BigDecimal("800.08"),

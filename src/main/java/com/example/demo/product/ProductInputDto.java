@@ -2,6 +2,8 @@ package com.example.demo.product;
 
 import java.math.BigDecimal;
 
+import static com.example.demo.product.TypeOfProduct.*;
+
 public class ProductInputDto {
     private Integer id;
     private String title;
@@ -155,11 +157,20 @@ public class ProductInputDto {
         this.typeOfProduct = typeOfProduct;
     }
 
-    public Tool convertToTool() {
-        return new Tool(id, title, price, energyResource, accuracy, toolType, consumable, rechargeable);
+    public Product convertToProduct() {
+        switch (typeOfProduct) {
+            case TOOL:
+                return new Tool(id, title, price, energyResource, accuracy, toolType, consumable, rechargeable);
+            case WORKTABLE:
+                return new Worktable(id, title, price, energyResource, accuracy, worktableType, typeOfWork, portable);
+            default:
+                throw new IncorrectProductTypeException("Incorrect type of product :" + typeOfProduct);
+        }
     }
 
-    public Worktable convertToWorktable() {
-        return new Worktable(id, title, price, energyResource, accuracy, worktableType, typeOfWork, portable);
+    public static class IncorrectProductTypeException extends RuntimeException {
+        public IncorrectProductTypeException(String errorMessage) {
+            super(errorMessage);
+        }
     }
 }
