@@ -167,10 +167,4 @@ public class ProductInputDto {
                 throw new IncorrectProductTypeException("Incorrect type of product :" + typeOfProduct);
         }
     }
-
-    public static class IncorrectProductTypeException extends RuntimeException {
-        public IncorrectProductTypeException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
 }
