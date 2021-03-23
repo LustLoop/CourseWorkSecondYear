@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -48,18 +47,46 @@ public class ProductController {
                 false,
                 true);
 
-        Product product3 = new Worktable(null,
-                "Cutting board",
+        Product product3 = new HydraulicWorktable(null,
+                "Hydraulic cutting board",
                 new BigDecimal("45360.08"),
                 "Socket?",
                 "Why is it even string?",
                 WorktableType.GRINDING_MACHINE,
-                TypeOfWork.HYDRAULIC,
-                false);
+                false,
+                10,
+                6);
+
+        Product product4 = new LaserWorktable(null,
+                "Laser cutting board",
+                new BigDecimal("460.08"),
+                "Socket?",
+                "Why is it even string?",
+                WorktableType.GRINDING_MACHINE,
+                false,
+                10,
+                5,
+                20,
+                5);
+
+        Worktable product5 = new PlasmicWorktable(null,
+                "Plasmic cutting board",
+                new BigDecimal("4512310.08"),
+                "Socket?",
+                "Why is it even string?",
+                WorktableType.GRINDING_MACHINE,
+                false,
+                10,
+                6,
+                3);
 
         productRepository.addNewProduct(product1);
         productRepository.addNewProduct(product2);
         productRepository.addNewProduct(product3);
+        productRepository.addNewProduct(product4);
+        productRepository.addNewProduct(product5);
+
+        System.out.println(product5.countEfficiency());
 
         return productRepository.getAllProducts();
     }

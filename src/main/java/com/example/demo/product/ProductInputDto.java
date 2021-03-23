@@ -14,7 +14,6 @@ public class ProductInputDto {
     private boolean consumable;
     private boolean rechargeable;
     private WorktableType worktableType;
-    private TypeOfWork typeOfWork;
     private boolean portable;
     private TypeOfProduct typeOfProduct;
 
@@ -47,7 +46,6 @@ public class ProductInputDto {
                            String energyResource,
                            String accuracy,
                            WorktableType worktableType,
-                           TypeOfWork typeOfWork,
                            boolean portable,
                            TypeOfProduct typeOfProduct) {
         this.id = id;
@@ -56,7 +54,6 @@ public class ProductInputDto {
         this.energyResource = energyResource;
         this.accuracy = accuracy;
         this.worktableType = worktableType;
-        this.typeOfWork = typeOfWork;
         this.portable = portable;
         this.typeOfProduct = typeOfProduct;
     }
@@ -133,14 +130,6 @@ public class ProductInputDto {
         this.worktableType = worktableType;
     }
 
-    public TypeOfWork getTypeOfWork() {
-        return typeOfWork;
-    }
-
-    public void setTypeOfWork(TypeOfWork typeOfWork) {
-        this.typeOfWork = typeOfWork;
-    }
-
     public boolean isPortable() {
         return portable;
     }
@@ -162,7 +151,7 @@ public class ProductInputDto {
             case TOOL:
                 return new Tool(id, title, price, energyResource, accuracy, toolType, consumable, rechargeable);
             case WORKTABLE:
-                return new Worktable(id, title, price, energyResource, accuracy, worktableType, typeOfWork, portable);
+                return new Worktable(id, title, price, energyResource, accuracy, worktableType, portable);
             default:
                 throw new IncorrectProductTypeException("Incorrect type of product :" + typeOfProduct);
         }

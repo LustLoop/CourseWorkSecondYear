@@ -2,9 +2,8 @@ package com.example.demo.product;
 
 import java.math.BigDecimal;
 
-public class Worktable extends Product {
+public class Worktable extends Product implements CountableEfficiency {
     private WorktableType worktableType;
-    private TypeOfWork typeOfWork;
     private boolean portable;
 
     public Worktable(Integer id,
@@ -13,12 +12,10 @@ public class Worktable extends Product {
                      String energyResource,
                      String accuracy,
                      WorktableType worktableType,
-                     TypeOfWork typeOfWork,
                      boolean portable) {
         super(id, title, price, energyResource, accuracy);
         this.portable = portable;
         this.worktableType = worktableType;
-        this.typeOfWork = typeOfWork;
     }
 
     public boolean isPortable() {
@@ -37,11 +34,8 @@ public class Worktable extends Product {
         this.worktableType = worktableType;
     }
 
-    public TypeOfWork getTypeOfWork() {
-        return typeOfWork;
-    }
-
-    public void setTypeOfWork(TypeOfWork typeOfWork) {
-        this.typeOfWork = typeOfWork;
+    @Override
+    public float countEfficiency() {
+        return 0;
     }
 }
