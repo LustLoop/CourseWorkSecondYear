@@ -35,7 +35,7 @@ public class Worktable extends Product implements CountableEfficiency {
     }
 
     @Override
-    public float countEfficiency() {
-        return 0;
+    public BigDecimal countEfficiency() {
+        return null;
     }
 }

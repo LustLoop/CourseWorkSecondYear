@@ -1,11 +1,12 @@
 package com.example.demo.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class PlasmicWorktable extends Worktable {
-    private float electricityConsumes;
-    private float gasConsumes;
-    private float timeConsumesForOneUnit;
+    private BigDecimal electricityConsumes;
+    private BigDecimal gasConsumes;
+    private BigDecimal timeConsumesForOneUnit;
 
     public PlasmicWorktable(Integer id,
                             String title,
@@ -24,41 +25,41 @@ public class PlasmicWorktable extends Worktable {
                             String accuracy,
                             WorktableType worktableType,
                             boolean portable,
-                            float electricityConsumes,
-                            float gasConsumes,
-                            float timeConsumesForOneUnit) {
+                            BigDecimal electricityConsumes,
+                            BigDecimal gasConsumes,
+                            BigDecimal timeConsumesForOneUnit) {
         super(id, title, price, energyResource, accuracy, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.gasConsumes = gasConsumes;
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
-    public float getElectricityConsumes() {
+    public BigDecimal getElectricityConsumes() {
         return electricityConsumes;
     }
 
-    public void setElectricityConsumes(float electricityConsumes) {
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
         this.electricityConsumes = electricityConsumes;
     }
 
-    public float getGasConsumes() {
+    public BigDecimal getGasConsumes() {
         return gasConsumes;
     }
 
-    public void setGasConsumes(float gasConsumes) {
+    public void setGasConsumes(BigDecimal gasConsumes) {
         this.gasConsumes = gasConsumes;
     }
 
-    public float getTimeConsumesForOneUnit() {
+    public BigDecimal getTimeConsumesForOneUnit() {
         return timeConsumesForOneUnit;
     }
 
-    public void setTimeConsumesForOneUnit(float timeConsumesForOneUnit) {
+    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
     @Override
-    public float countEfficiency() {
-        return (electricityConsumes + gasConsumes) / timeConsumesForOneUnit;
+    public BigDecimal countEfficiency() {
+        return (electricityConsumes.add(gasConsumes)).divide(timeConsumesForOneUnit, 2, RoundingMode.CEILING);
     }
 }

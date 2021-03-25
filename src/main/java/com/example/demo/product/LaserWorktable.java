@@ -1,12 +1,13 @@
 package com.example.demo.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class LaserWorktable extends Worktable {
-    private float electricityConsumes;
-    private float cartridgeConsumes;
-    private int cartridgeUsageTimes;
-    private float timeConsumesForOneUnit;
+    private BigDecimal electricityConsumes;
+    private BigDecimal cartridgeConsumes;
+    private BigDecimal cartridgeUsageTimes;
+    private BigDecimal timeConsumesForOneUnit;
 
     public LaserWorktable(Integer id,
                           String title,
@@ -25,10 +26,10 @@ public class LaserWorktable extends Worktable {
                           String accuracy,
                           WorktableType worktableType,
                           boolean portable,
-                          float electricityConsumes,
-                          float cartridgeConsumes,
-                          int cartridgeUsageTimes,
-                          float timeConsumesForOneUnit) {
+                          BigDecimal electricityConsumes,
+                          BigDecimal cartridgeConsumes,
+                          BigDecimal cartridgeUsageTimes,
+                          BigDecimal timeConsumesForOneUnit) {
         super(id, title, price, energyResource, accuracy, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.cartridgeConsumes = cartridgeConsumes;
@@ -36,32 +37,33 @@ public class LaserWorktable extends Worktable {
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
-    public float getElectricityConsumes() {
+    public BigDecimal getElectricityConsumes() {
         return electricityConsumes;
     }
 
-    public void setElectricityConsumes(float electricityConsumes) {
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
         this.electricityConsumes = electricityConsumes;
     }
 
-    public float getCartridgeConsumes() {
+    public BigDecimal getCartridgeConsumes() {
         return cartridgeConsumes;
     }
 
-    public void setCartridgeConsumes(float cartridgeConsumes) {
+    public void setCartridgeConsumes(BigDecimal cartridgeConsumes) {
         this.cartridgeConsumes = cartridgeConsumes;
     }
 
-    public int getCartridgeUsageTimes() {
+    public BigDecimal getCartridgeUsageTimes() {
         return cartridgeUsageTimes;
     }
 
-    public void setCartridgeUsageTimes(int cartridgeUsageTimes) {
+    public void setCartridgeUsageTimes(BigDecimal cartridgeUsageTimes) {
         this.cartridgeUsageTimes = cartridgeUsageTimes;
     }
 
     @Override
-    public float countEfficiency() {
-        return (electricityConsumes + (cartridgeConsumes / cartridgeUsageTimes)) / timeConsumesForOneUnit;
+    public BigDecimal countEfficiency() {
+        return (electricityConsumes.add(cartridgeConsumes.divide(cartridgeUsageTimes, 2, RoundingMode.CEILING)))
+                .divide(timeConsumesForOneUnit, 2, RoundingMode.CEILING);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.demo.product;
 
+import java.math.BigDecimal;
+
 public interface CountableEfficiency {
-    float countEfficiency();
+    BigDecimal countEfficiency();
 }

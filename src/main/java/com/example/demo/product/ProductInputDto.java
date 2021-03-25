@@ -2,8 +2,6 @@ package com.example.demo.product;
 
 import java.math.BigDecimal;
 
-import static com.example.demo.product.TypeOfProduct.*;
-
 public class ProductInputDto {
     private Integer id;
     private String title;
@@ -14,8 +12,14 @@ public class ProductInputDto {
     private boolean consumable;
     private boolean rechargeable;
     private WorktableType worktableType;
+    private TypeOfWork typeOfWork;
     private boolean portable;
     private TypeOfProduct typeOfProduct;
+    private BigDecimal timeConsumesForOneUnit;
+    private BigDecimal electricityConsumes;
+    private BigDecimal cartridgeConsumes;
+    private BigDecimal cartridgeUsageTimes;
+    private BigDecimal gasConsumes;
 
     public ProductInputDto() {
     }
@@ -28,7 +32,15 @@ public class ProductInputDto {
                            ToolType toolType,
                            boolean consumable,
                            boolean rechargeable,
-                           TypeOfProduct typeOfProduct) {
+                           WorktableType worktableType,
+                           TypeOfWork typeOfWork,
+                           boolean portable,
+                           TypeOfProduct typeOfProduct,
+                           BigDecimal timeConsumesForOneUnit,
+                           BigDecimal electricityConsumes,
+                           BigDecimal cartridgeConsumes,
+                           BigDecimal cartridgeUsageTimes,
+                           BigDecimal gasConsumes) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -37,25 +49,15 @@ public class ProductInputDto {
         this.toolType = toolType;
         this.consumable = consumable;
         this.rechargeable = rechargeable;
-        this.typeOfProduct = typeOfProduct;
-    }
-
-    public ProductInputDto(Integer id,
-                           String title,
-                           BigDecimal price,
-                           String energyResource,
-                           String accuracy,
-                           WorktableType worktableType,
-                           boolean portable,
-                           TypeOfProduct typeOfProduct) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.energyResource = energyResource;
-        this.accuracy = accuracy;
         this.worktableType = worktableType;
+        this.typeOfWork = typeOfWork;
         this.portable = portable;
         this.typeOfProduct = typeOfProduct;
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
+        this.electricityConsumes = electricityConsumes;
+        this.cartridgeConsumes = cartridgeConsumes;
+        this.cartridgeUsageTimes = cartridgeUsageTimes;
+        this.gasConsumes = gasConsumes;
     }
 
     public Integer getId() {
@@ -98,11 +100,11 @@ public class ProductInputDto {
         this.accuracy = accuracy;
     }
 
-    public ToolType getType() {
+    public ToolType getToolType() {
         return toolType;
     }
 
-    public void setType(ToolType toolType) {
+    public void setToolType(ToolType toolType) {
         this.toolType = toolType;
     }
 
@@ -130,6 +132,14 @@ public class ProductInputDto {
         this.worktableType = worktableType;
     }
 
+    public TypeOfWork getTypeOfWork() {
+        return typeOfWork;
+    }
+
+    public void setTypeOfWork(TypeOfWork typeOfWork) {
+        this.typeOfWork = typeOfWork;
+    }
+
     public boolean isPortable() {
         return portable;
     }
@@ -144,6 +154,46 @@ public class ProductInputDto {
 
     public void setTypeOfProduct(TypeOfProduct typeOfProduct) {
         this.typeOfProduct = typeOfProduct;
+    }
+
+    public BigDecimal getTimeConsumesForOneUnit() {
+        return timeConsumesForOneUnit;
+    }
+
+    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
+    }
+
+    public BigDecimal getElectricityConsumes() {
+        return electricityConsumes;
+    }
+
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
+        this.electricityConsumes = electricityConsumes;
+    }
+
+    public BigDecimal getCartridgeConsumes() {
+        return cartridgeConsumes;
+    }
+
+    public void setCartridgeConsumes(BigDecimal cartridgeConsumes) {
+        this.cartridgeConsumes = cartridgeConsumes;
+    }
+
+    public BigDecimal getCartridgeUsageTimes() {
+        return cartridgeUsageTimes;
+    }
+
+    public void setCartridgeUsageTimes(BigDecimal cartridgeUsageTimes) {
+        this.cartridgeUsageTimes = cartridgeUsageTimes;
+    }
+
+    public BigDecimal getGasConsumes() {
+        return gasConsumes;
+    }
+
+    public void setGasConsumes(BigDecimal gasConsumes) {
+        this.gasConsumes = gasConsumes;
     }
 
     public Product convertToProduct() {

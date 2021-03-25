@@ -1,0 +1,52 @@
+CREATE TABLE products (
+	product_id SERIAL PRIMARY KEY,
+	title VARCHAR ( 250 ) NOT NULL,
+	price MONEY,
+	energy_resource VARCHAR ( 250 ) NOT NULL,
+	accuracy VARCHAR ( 250 ) NOT NULL
+);
+
+//add toolType later
+
+CREATE TABLE tools (
+    tool_id SERIAL PRIMARY KEY,
+	product_id INT REFERENCES products (product_id),
+	consumable BOOLEAN,
+	rechargeable BOOLEAN
+);
+
+CREATE TABLE worktable_types (
+	worktable_type_id SERIAL PRIMARY KEY,
+	title VARCHAR ( 50 ) UNIQUE NOT NULL
+);
+
+CREATE TABLE worktables (
+	worktable_id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products (product_id),
+    worktable_type_id INT REFERENCES worktable_types (worktable_type_id),
+    portable BOOLEAN
+);
+
+CREATE TABLE hydraulic_worktables (
+	hydraulic_worktable_id SERIAL PRIMARY KEY,
+	worktable_id INT REFERENCES worktables (worktable_id),
+	electricity_consumes MONEY,
+	time_consumes_for_one_unit MONEY
+);
+
+CREATE TABLE laser_worktables (
+	laser_worktable_id SERIAL PRIMARY KEY,
+    worktable_id INT REFERENCES worktables (worktable_id),
+    electricity_consumes MONEY,
+    cartridge_consumes MONEY,
+    cartridge_usage_times INT,
+    time_consumes_for_one_unit MONEY
+);
+
+CREATE TABLE plasmic_worktables (
+	plasmic_worktable_id SERIAL PRIMARY KEY,
+    worktable_id INT REFERENCES worktables (worktable_id),
+    electricity_consumes MONEY,
+    gas_consumes MONEY,
+    time_consumes_for_one_unit MONEY
+);

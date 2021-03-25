@@ -1,10 +1,11 @@
 package com.example.demo.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class HydraulicWorktable extends Worktable {
-    private float electricityConsumes;
-    private float timeConsumesForOneUnit;
+    private BigDecimal electricityConsumes;
+    private BigDecimal timeConsumesForOneUnit;
 
     public HydraulicWorktable(Integer id,
                               String title,
@@ -23,31 +24,31 @@ public class HydraulicWorktable extends Worktable {
                               String accuracy,
                               WorktableType worktableType,
                               boolean portable,
-                              float electricityConsumes,
-                              float timeConsumesForOneUnit) {
+                              BigDecimal electricityConsumes,
+                              BigDecimal timeConsumesForOneUnit) {
         super(id, title, price, energyResource, accuracy, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
-    public float getElectricityConsumes() {
+    public BigDecimal getElectricityConsumes() {
         return electricityConsumes;
     }
 
-    public void setElectricityConsumes(float electricityConsumes) {
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
         this.electricityConsumes = electricityConsumes;
     }
 
-    public float getTimeConsumesForOneUnit() {
+    public BigDecimal getTimeConsumesForOneUnit() {
         return timeConsumesForOneUnit;
     }
 
-    public void setTimeConsumesForOneUnit(float timeConsumesForOneUnit) {
+    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
     @Override
-    public float countEfficiency() {
-        return electricityConsumes / timeConsumesForOneUnit;
+    public BigDecimal countEfficiency() {
+        return electricityConsumes.divide(timeConsumesForOneUnit, 2, RoundingMode.CEILING);
     }
 }
