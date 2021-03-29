@@ -16,18 +16,8 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @RequestMapping
-//    public Collection<Product> getAllProducts() {
-//        return productService.getAllProducts();
-//    }
-//
     @PostMapping("/add")
     public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
         productService.addNewProduct(productInputDto);
     }
-//
-//    @GetMapping("/test")
-//    public Collection<Product> test() {
-//        return productService.test();
-//    }
 }

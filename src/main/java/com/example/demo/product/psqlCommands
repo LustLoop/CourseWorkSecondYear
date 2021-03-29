@@ -6,11 +6,15 @@ CREATE TABLE products (
 	accuracy VARCHAR ( 250 ) NOT NULL
 );
 
-//add toolType later
+CREATE TABLE tool_types (
+	tool_type_id SERIAL PRIMARY KEY,
+	title VARCHAR ( 50 ) UNIQUE NOT NULL
+);
 
 CREATE TABLE tools (
     tool_id SERIAL PRIMARY KEY,
 	product_id INT REFERENCES products (product_id),
+	tool_type_id INT REFERENCES tool_types (tool_type_id),
 	consumable BOOLEAN,
 	rechargeable BOOLEAN
 );

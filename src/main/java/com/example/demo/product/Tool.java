@@ -7,7 +7,6 @@ public class Tool extends Product {
     private boolean consumable;
     private boolean rechargeable;
 
-
     public Tool(Integer id,
                 String title,
                 BigDecimal price,

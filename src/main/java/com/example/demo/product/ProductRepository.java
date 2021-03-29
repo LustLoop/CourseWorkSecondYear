@@ -38,9 +38,27 @@ public class ProductRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public int getWorktableId(String title) {
+    public int getWorktableTypeId(String title) {
         String GET_WORKTABLE_ID = "SELECT worktable_type_id FROM worktable_types WHERE title = ?";
         return (Integer) jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[] { title }, Integer.class);
+    }
+
+    public int getToolTypeId(String title) {
+        String GET_TOOL_ID = "SELECT tool_type_id FROM tool_types WHERE title = ?";
+        return (Integer) jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[] { title }, Integer.class);
+    }
+
+    public int addNewTool(ProductInputDto product) {
+        int productId = addNewProduct(product);
+
+        String INSERT_WORKTABLE_SQL = "INSERT INTO tools (product_id, tool_type_id, consumable, rechargeable) "
+                + "VALUES (?,?,?,?)";
+
+        return jdbcTemplate.update(INSERT_WORKTABLE_SQL,
+                productId,
+                getToolTypeId(product.getToolType().name()),
+                product.isConsumable(),
+                product.isRechargeable());
     }
 
     public int addNewWorktable(ProductInputDto product) {
@@ -53,7 +71,7 @@ public class ProductRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_WORKTABLE_SQL, new String[]{"worktable_id"});
             ps.setInt(1, productId);
-            ps.setInt(2, getWorktableId(product.getTypeOfWork().name()));
+            ps.setInt(2, getWorktableTypeId(product.getTypeOfWork().name()));
             ps.setBoolean(3, product.isPortable());
             return ps;
         }, keyHolder);
@@ -69,13 +87,44 @@ public class ProductRepository {
                 + "VALUES (?,?,?)";
 
         return jdbcTemplate.update(INSERT_HYDRAULIC_WORKTABLE_SQL,
-                worktableId, product.getElectricityConsumes(), product.getTimeConsumesForOneUnit());
+                worktableId,
+                product.getElectricityConsumes(),
+                product.getTimeConsumesForOneUnit());
+    }
+
+    public int addNewLaserWorktable(ProductInputDto product) {
+        int worktableId = addNewWorktable(product);
+
+        String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables "
+                + "(worktable_id, electricity_consumes, time_consumes_for_one_unit, cartridge_consumes, cartridge_usage_times) "
+                + "VALUES (?,?,?,?,?)";
+
+        return jdbcTemplate.update(INSERT_LASER_WORKTABLE_SQL,
+                worktableId,
+                product.getElectricityConsumes(),
+                product.getTimeConsumesForOneUnit(),
+                product.getCartridgeConsumes(),
+                product.getCartridgeUsageTimes());
+    }
+
+    public int addNewPlasmicWorktable(ProductInputDto product) {
+        int worktableId = addNewWorktable(product);
+
+        String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables "
+                + "(worktable_id, electricity_consumes, time_consumes_for_one_unit, gas_consumes) "
+                + "VALUES (?,?,?,?)";
+
+        return jdbcTemplate.update(INSERT_PLASMIC_WORKTABLE_SQL,
+                worktableId,
+                product.getElectricityConsumes(),
+                product.getTimeConsumesForOneUnit(),
+                product.getGasConsumes());
     }
 
     public void add(ProductInputDto product) {
         switch (product.getTypeOfProduct()) {
             case TOOL:
-                System.out.println("Didnt implement adding tools");
+                addNewTool(product);
                 break;
             case WORKTABLE:
                 switch (product.getTypeOfWork()) {
@@ -83,15 +132,18 @@ public class ProductRepository {
                         addNewHydraulicWorktable(product);
                         break;
                     case LASER:
-                        System.out.println("2");
+                        addNewLaserWorktable(product);
                         break;
                     case PLASMIC:
-                        System.out.println("3");
+                        addNewPlasmicWorktable(product);
                         break;
                     default:
-                        System.out.println("Something went wrong");
+                        System.out.println("Unsupportable type of worktable " + product.getTypeOfWork());
                         break;
                 }
+            default:
+                System.out.println("Unsupportable type of product");
+                break;
         }
     }
 }
