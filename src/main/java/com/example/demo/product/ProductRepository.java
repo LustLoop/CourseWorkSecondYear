@@ -7,6 +7,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ProductRepository {
@@ -16,13 +19,8 @@ public class ProductRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int getNumberOfProducts() {
-        return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM PRODUCT", Integer.class);
-    }
-
     public int addNewProduct(ProductInputDto product) {
-        String INSERT_PRODUCT_SQL = "INSERT INTO products (title, price, energy_resource, accuracy) " + "VALUES (?,?,?,?)";
+        String INSERT_PRODUCT_SQL = "INSERT INTO products (title, price, energy_resource, accuracy) VALUES (?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -39,20 +37,20 @@ public class ProductRepository {
     }
 
     public int getWorktableTypeId(String title) {
-        String GET_WORKTABLE_ID = "SELECT worktable_type_id FROM worktable_types WHERE title = ?";
+        String GET_WORKTABLE_ID = "SELECT worktable_type_id FROM worktable_types WHERE worktable_type_title = ?";
         return (Integer) jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[] { title }, Integer.class);
     }
 
     public int getToolTypeId(String title) {
-        String GET_TOOL_ID = "SELECT tool_type_id FROM tool_types WHERE title = ?";
+        String GET_TOOL_ID = "SELECT tool_type_id FROM tool_types WHERE tool_type_title = ?";
         return (Integer) jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[] { title }, Integer.class);
     }
 
     public int addNewTool(ProductInputDto product) {
         int productId = addNewProduct(product);
 
-        String INSERT_WORKTABLE_SQL = "INSERT INTO tools (product_id, tool_type_id, consumable, rechargeable) "
-                + "VALUES (?,?,?,?)";
+        String INSERT_WORKTABLE_SQL = "INSERT INTO tools (product_id, tool_type_id, consumable, rechargeable) " +
+                "VALUES (?,?,?,?)";
 
         return jdbcTemplate.update(INSERT_WORKTABLE_SQL,
                 productId,
@@ -64,7 +62,7 @@ public class ProductRepository {
     public int addNewWorktable(ProductInputDto product) {
         int productId = addNewProduct(product);
 
-        String INSERT_WORKTABLE_SQL = "INSERT INTO worktables (product_id, worktable_type_id, portable) " + "VALUES (?,?,?)";
+        String INSERT_WORKTABLE_SQL = "INSERT INTO worktables (product_id, worktable_type_id, portable) VALUES (?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -82,9 +80,9 @@ public class ProductRepository {
     public int addNewHydraulicWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
-        String INSERT_HYDRAULIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables "
-                + "(worktable_id, electricity_consumes, time_consumes_for_one_unit) "
-                + "VALUES (?,?,?)";
+        String INSERT_HYDRAULIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
+                "(worktable_id, electricity_consumes, time_consumes_for_one_unit) " +
+                "VALUES (?,?,?)";
 
         return jdbcTemplate.update(INSERT_HYDRAULIC_WORKTABLE_SQL,
                 worktableId,
@@ -95,9 +93,9 @@ public class ProductRepository {
     public int addNewLaserWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
-        String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables "
-                + "(worktable_id, electricity_consumes, time_consumes_for_one_unit, cartridge_consumes, cartridge_usage_times) "
-                + "VALUES (?,?,?,?,?)";
+        String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables " +
+                "(worktable_id, electricity_consumes, time_consumes_for_one_unit, cartridge_consumes, cartridge_usage_times) " +
+                "VALUES (?,?,?,?,?)";
 
         return jdbcTemplate.update(INSERT_LASER_WORKTABLE_SQL,
                 worktableId,
@@ -110,9 +108,9 @@ public class ProductRepository {
     public int addNewPlasmicWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
-        String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables "
-                + "(worktable_id, electricity_consumes, time_consumes_for_one_unit, gas_consumes) "
-                + "VALUES (?,?,?,?)";
+        String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
+                "(worktable_id, electricity_consumes, time_consumes_for_one_unit, gas_consumes) " +
+                "VALUES (?,?,?,?)";
 
         return jdbcTemplate.update(INSERT_PLASMIC_WORKTABLE_SQL,
                 worktableId,
@@ -145,5 +143,30 @@ public class ProductRepository {
                 System.out.println("Unsupportable type of product");
                 break;
         }
+    }
+
+    public Collection<Product> getAll() {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+            "SELECT tool_types.tool_type_title, T.consumable, T.rechargeable " +
+                    "FROM tool_types " +
+                    "JOIN tools AS T " +
+                    "ON tool_types.tool_type_id = T.tool_type_id ");
+
+        for (Map row : rows) {
+            ProductInputDto product = new ProductInputDto();
+            // convert to dto?
+        }
+        return null;
+    }
+
+    public ProductInputDto getProductById(int input_id) {
+        String GET_BY_ID = "SELECT DISTINCT ON (products.product_id) * " +
+                "FROM products " +
+                "JOIN tools " +
+                "ON products.product_id = ? " +
+                "JOIN tool_types " +
+                "ON tool_types.tool_type_id = tools.tool_type_id ";
+
+        return jdbcTemplate.queryForObject(GET_BY_ID, new Object[] { input_id }, new ProductRowMapper());
     }
 }
