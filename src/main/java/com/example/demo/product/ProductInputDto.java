@@ -15,6 +15,11 @@ public class ProductInputDto {
     private TypeOfWork typeOfWork;
     private boolean portable;
     private TypeOfProduct typeOfProduct;
+    private BigDecimal timeConsumesForOneUnit;
+    private BigDecimal electricityConsumes;
+    private BigDecimal cartridgeConsumes;
+    private BigDecimal cartridgeUsageTimes;
+    private BigDecimal gasConsumes;
 
     public ProductInputDto() {
     }
@@ -27,7 +32,15 @@ public class ProductInputDto {
                            ToolType toolType,
                            boolean consumable,
                            boolean rechargeable,
-                           TypeOfProduct typeOfProduct) {
+                           WorktableType worktableType,
+                           TypeOfWork typeOfWork,
+                           boolean portable,
+                           TypeOfProduct typeOfProduct,
+                           BigDecimal timeConsumesForOneUnit,
+                           BigDecimal electricityConsumes,
+                           BigDecimal cartridgeConsumes,
+                           BigDecimal cartridgeUsageTimes,
+                           BigDecimal gasConsumes) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -36,27 +49,15 @@ public class ProductInputDto {
         this.toolType = toolType;
         this.consumable = consumable;
         this.rechargeable = rechargeable;
-        this.typeOfProduct = typeOfProduct;
-    }
-
-    public ProductInputDto(Integer id,
-                           String title,
-                           BigDecimal price,
-                           String energyResource,
-                           String accuracy,
-                           WorktableType worktableType,
-                           TypeOfWork typeOfWork,
-                           boolean portable,
-                           TypeOfProduct typeOfProduct) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.energyResource = energyResource;
-        this.accuracy = accuracy;
         this.worktableType = worktableType;
         this.typeOfWork = typeOfWork;
         this.portable = portable;
         this.typeOfProduct = typeOfProduct;
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
+        this.electricityConsumes = electricityConsumes;
+        this.cartridgeConsumes = cartridgeConsumes;
+        this.cartridgeUsageTimes = cartridgeUsageTimes;
+        this.gasConsumes = gasConsumes;
     }
 
     public Integer getId() {
@@ -99,11 +100,11 @@ public class ProductInputDto {
         this.accuracy = accuracy;
     }
 
-    public ToolType getType() {
+    public ToolType getToolType() {
         return toolType;
     }
 
-    public void setType(ToolType toolType) {
+    public void setToolType(ToolType toolType) {
         this.toolType = toolType;
     }
 
@@ -155,11 +156,54 @@ public class ProductInputDto {
         this.typeOfProduct = typeOfProduct;
     }
 
-    public Tool convertToTool() {
-        return new Tool(id, title, price, energyResource, accuracy, toolType, consumable, rechargeable);
+    public BigDecimal getTimeConsumesForOneUnit() {
+        return timeConsumesForOneUnit;
     }
 
-    public Worktable convertToWorktable() {
-        return new Worktable(id, title, price, energyResource, accuracy, worktableType, typeOfWork, portable);
+    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
+    }
+
+    public BigDecimal getElectricityConsumes() {
+        return electricityConsumes;
+    }
+
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
+        this.electricityConsumes = electricityConsumes;
+    }
+
+    public BigDecimal getCartridgeConsumes() {
+        return cartridgeConsumes;
+    }
+
+    public void setCartridgeConsumes(BigDecimal cartridgeConsumes) {
+        this.cartridgeConsumes = cartridgeConsumes;
+    }
+
+    public BigDecimal getCartridgeUsageTimes() {
+        return cartridgeUsageTimes;
+    }
+
+    public void setCartridgeUsageTimes(BigDecimal cartridgeUsageTimes) {
+        this.cartridgeUsageTimes = cartridgeUsageTimes;
+    }
+
+    public BigDecimal getGasConsumes() {
+        return gasConsumes;
+    }
+
+    public void setGasConsumes(BigDecimal gasConsumes) {
+        this.gasConsumes = gasConsumes;
+    }
+
+    public Product convertToProduct() {
+        switch (typeOfProduct) {
+            case TOOL:
+                return new Tool(id, title, price, energyResource, accuracy, toolType, consumable, rechargeable);
+            case WORKTABLE:
+                return new Worktable(id, title, price, energyResource, accuracy, worktableType, portable);
+            default:
+                throw new IncorrectProductTypeException("Incorrect type of product :" + typeOfProduct);
+        }
     }
 }
