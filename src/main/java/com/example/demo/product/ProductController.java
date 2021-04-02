@@ -17,11 +17,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public Collection<Product> getAll() {
+    public Collection<ProductInputDto> getAll() {
         return productService.getAll();
     }
 
-    @GetMapping("/test")
+    @GetMapping("/product")
     public ProductInputDto getProductById() {
         return productService.getProduct(2);
     }

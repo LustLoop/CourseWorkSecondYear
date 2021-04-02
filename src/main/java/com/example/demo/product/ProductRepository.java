@@ -1,16 +1,12 @@
 package com.example.demo.product;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ProductRepository {
@@ -82,7 +78,7 @@ public class ProductRepository {
             ps.setInt(2, getWorktableTypeId(product.getWorktableType().name()));
             ps.setBoolean(3, product.isPortable());
             ps.setBigDecimal(4, product.getElectricityConsumes());
-            ps.setBigDecimal(5,  product.getTimeConsumesForOneUnit());
+            ps.setBigDecimal(5, product.getTimeConsumesForOneUnit());
             return ps;
         }, keyHolder);
 
@@ -148,18 +144,26 @@ public class ProductRepository {
         }
     }
 
-    public Collection<Product> getAll() {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                "SELECT tool_types.tool_type_title, T.consumable, T.rechargeable " +
-                        "FROM tool_types " +
-                        "JOIN tools AS T " +
-                        "ON tool_types.tool_type_id = T.tool_type_id ");
-
-        for (Map row : rows) {
-            ProductInputDto product = new ProductInputDto();
-            // convert to dto?
-        }
-        return null;
+    public Collection<ProductInputDto> getAll() {
+        String GET_ALL = "SELECT DISTINCT ON (p.product_id) * " +
+                "FROM products p " +
+                "         LEFT JOIN product_types pt " +
+                "                   ON pt.type_of_product_id = p.type_of_product_id " +
+                "         LEFT JOIN tools t " +
+                "                   ON p.type_of_product_id = 1 AND t.product_id = p.product_id " +
+                "         LEFT JOIN tool_types tt " +
+                "                   ON tt.tool_type_id = t.tool_type_id " +
+                "         LEFT JOIN worktables w " +
+                "                   ON p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN worktable_types wt " +
+                "                   ON wt.worktable_type_id = w.worktable_type_id " +
+                "         LEFT JOIN hydraulic_worktables hw " +
+                "                   ON w.worktable_type_id = 1 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN laser_worktables " +
+                "                   ON w.worktable_type_id = 2 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN plasmic_worktables " +
+                "                   ON w.worktable_type_id = 3 AND p.type_of_product_id = 2 AND w.product_id = p.product_id ";
+        return jdbcTemplate.query(GET_ALL, new Object[]{}, new ProductRowMapper());
     }
 
     public ProductInputDto getProductById(int input_id) {
@@ -171,7 +175,7 @@ public class ProductRepository {
                 "                   ON p.type_of_product_id = 1 AND t.product_id = p.product_id " +
                 "         LEFT JOIN tool_types tt " +
                 "                   ON tt.tool_type_id = t.tool_type_id " +
-                "         JOIN worktables w " +
+                "         LEFT JOIN worktables w " +
                 "                   ON p.type_of_product_id = 2 AND w.product_id = p.product_id " +
                 "         LEFT JOIN worktable_types wt " +
                 "                   ON wt.worktable_type_id = w.worktable_type_id " +

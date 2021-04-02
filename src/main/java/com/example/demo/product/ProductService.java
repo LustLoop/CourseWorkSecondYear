@@ -17,7 +17,7 @@ public class ProductService {
         productRepository.add(product);
     }
 
-    public Collection<Product> getAll() {
+    public Collection<ProductInputDto> getAll() {
         return productRepository.getAll();
     }
 
