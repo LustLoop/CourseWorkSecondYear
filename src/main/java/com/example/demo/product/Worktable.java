@@ -11,11 +11,21 @@ public class Worktable extends Product implements CountableEfficiency {
                      BigDecimal price,
                      String energyResource,
                      String accuracy,
+                     TypeOfProduct typeOfProduct) {
+        super(id, title, price, energyResource, accuracy, typeOfProduct);
+    }
+
+    public Worktable(Integer id,
+                     String title,
+                     BigDecimal price,
+                     String energyResource,
+                     String accuracy,
+                     TypeOfProduct typeOfProduct,
                      WorktableType worktableType,
                      boolean portable) {
-        super(id, title, price, energyResource, accuracy);
-        this.portable = portable;
+        super(id, title, price, energyResource, accuracy, typeOfProduct);
         this.worktableType = worktableType;
+        this.portable = portable;
     }
 
     public boolean isPortable() {

@@ -14,23 +14,14 @@ public class LaserWorktable extends Worktable {
                           BigDecimal price,
                           String energyResource,
                           String accuracy,
-                          WorktableType worktableType,
-                          boolean portable) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
-    }
-
-    public LaserWorktable(Integer id,
-                          String title,
-                          BigDecimal price,
-                          String energyResource,
-                          String accuracy,
+                          TypeOfProduct typeOfProduct,
                           WorktableType worktableType,
                           boolean portable,
                           BigDecimal electricityConsumes,
                           BigDecimal cartridgeConsumes,
                           BigDecimal cartridgeUsageTimes,
                           BigDecimal timeConsumesForOneUnit) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
+        super(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.cartridgeConsumes = cartridgeConsumes;
         this.cartridgeUsageTimes = cartridgeUsageTimes;

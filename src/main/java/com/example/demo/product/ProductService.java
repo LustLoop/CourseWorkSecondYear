@@ -21,7 +21,7 @@ public class ProductService {
         return productRepository.getAll();
     }
 
-    public ProductInputDto getTool(int id) {
+    public ProductInputDto getProduct(int id) {
         return productRepository.getProductById(id);
     }
 }

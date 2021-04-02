@@ -8,16 +8,18 @@ public abstract class Product {
     private BigDecimal price;
     private String energyResource;
     private String accuracy;
+    private TypeOfProduct typeOfProduct;
 
     public Product() {
     }
 
-    public Product(Integer id, String title, BigDecimal price, String energyResource, String accuracy) {
+    public Product(Integer id, String title, BigDecimal price, String energyResource, String accuracy, TypeOfProduct typeOfProduct) {
         this.id = id;
         this.title = title;
         this.price = price;
         this.energyResource = energyResource;
         this.accuracy = accuracy;
+        this.typeOfProduct = typeOfProduct;
     }
 
     public Integer getId() {
@@ -58,5 +60,13 @@ public abstract class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public TypeOfProduct getTypeOfProduct() {
+        return typeOfProduct;
+    }
+
+    public void setTypeOfProduct(TypeOfProduct typeOfProduct) {
+        this.typeOfProduct = typeOfProduct;
     }
 }

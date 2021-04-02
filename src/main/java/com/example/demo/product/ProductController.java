@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("/test")
     public ProductInputDto getProductById() {
-        return productService.getTool(1);
+        return productService.getProduct(2);
     }
 
     @PostMapping("/add")

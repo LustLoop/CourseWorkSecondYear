@@ -12,21 +12,12 @@ public class HydraulicWorktable extends Worktable {
                               BigDecimal price,
                               String energyResource,
                               String accuracy,
-                              WorktableType worktableType,
-                              boolean portable) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
-    }
-
-    public HydraulicWorktable(Integer id,
-                              String title,
-                              BigDecimal price,
-                              String energyResource,
-                              String accuracy,
+                              TypeOfProduct typeOfProduct,
                               WorktableType worktableType,
                               boolean portable,
                               BigDecimal electricityConsumes,
                               BigDecimal timeConsumesForOneUnit) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
+        super(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }

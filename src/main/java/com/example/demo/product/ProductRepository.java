@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,8 @@ public class ProductRepository {
     }
 
     public int addNewProduct(ProductInputDto product) {
-        String INSERT_PRODUCT_SQL = "INSERT INTO products (title, price, energy_resource, accuracy) VALUES (?,?,?,?)";
+        String INSERT_PRODUCT_SQL = "INSERT INTO products (title, price, energy_resource, accuracy, type_of_product_id)" +
+                " VALUES (?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -30,20 +32,26 @@ public class ProductRepository {
             ps.setBigDecimal(2, product.getPrice());
             ps.setString(3, product.getEnergyResource());
             ps.setString(4, product.getAccuracy());
+            ps.setInt(5, getProductTypeId(product.getTypeOfProduct().name()));
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
     }
 
+    public int getProductTypeId(String title) {
+        String GET_PRODUCT_ID = "SELECT type_of_product_id FROM product_types WHERE type_of_product_title = ?";
+        return (Integer) jdbcTemplate.queryForObject(GET_PRODUCT_ID, new Object[]{title}, Integer.class);
+    }
+
     public int getWorktableTypeId(String title) {
         String GET_WORKTABLE_ID = "SELECT worktable_type_id FROM worktable_types WHERE worktable_type_title = ?";
-        return (Integer) jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[] { title }, Integer.class);
+        return (Integer) jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[]{title}, Integer.class);
     }
 
     public int getToolTypeId(String title) {
         String GET_TOOL_ID = "SELECT tool_type_id FROM tool_types WHERE tool_type_title = ?";
-        return (Integer) jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[] { title }, Integer.class);
+        return (Integer) jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[]{title}, Integer.class);
     }
 
     public int addNewTool(ProductInputDto product) {
@@ -62,15 +70,19 @@ public class ProductRepository {
     public int addNewWorktable(ProductInputDto product) {
         int productId = addNewProduct(product);
 
-        String INSERT_WORKTABLE_SQL = "INSERT INTO worktables (product_id, worktable_type_id, portable) VALUES (?,?,?)";
+        String INSERT_WORKTABLE_SQL = "INSERT INTO worktables " +
+                "(product_id, worktable_type_id, portable, electricity_consumes, time_consumes_for_one_unit) " +
+                "VALUES (?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_WORKTABLE_SQL, new String[]{"worktable_id"});
             ps.setInt(1, productId);
-            ps.setInt(2, getWorktableTypeId(product.getTypeOfWork().name()));
+            ps.setInt(2, getWorktableTypeId(product.getWorktableType().name()));
             ps.setBoolean(3, product.isPortable());
+            ps.setBigDecimal(4, product.getElectricityConsumes());
+            ps.setBigDecimal(5,  product.getTimeConsumesForOneUnit());
             return ps;
         }, keyHolder);
 
@@ -81,26 +93,22 @@ public class ProductRepository {
         int worktableId = addNewWorktable(product);
 
         String INSERT_HYDRAULIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
-                "(worktable_id, electricity_consumes, time_consumes_for_one_unit) " +
-                "VALUES (?,?,?)";
+                "(worktable_id) " +
+                "VALUES (?)";
 
         return jdbcTemplate.update(INSERT_HYDRAULIC_WORKTABLE_SQL,
-                worktableId,
-                product.getElectricityConsumes(),
-                product.getTimeConsumesForOneUnit());
+                worktableId);
     }
 
     public int addNewLaserWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
         String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables " +
-                "(worktable_id, electricity_consumes, time_consumes_for_one_unit, cartridge_consumes, cartridge_usage_times) " +
-                "VALUES (?,?,?,?,?)";
+                "(worktable_id, cartridge_consumes, cartridge_usage_times) " +
+                "VALUES (?,?,?)";
 
         return jdbcTemplate.update(INSERT_LASER_WORKTABLE_SQL,
                 worktableId,
-                product.getElectricityConsumes(),
-                product.getTimeConsumesForOneUnit(),
                 product.getCartridgeConsumes(),
                 product.getCartridgeUsageTimes());
     }
@@ -110,12 +118,10 @@ public class ProductRepository {
 
         String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
                 "(worktable_id, electricity_consumes, time_consumes_for_one_unit, gas_consumes) " +
-                "VALUES (?,?,?,?)";
+                "VALUES (?,?)";
 
         return jdbcTemplate.update(INSERT_PLASMIC_WORKTABLE_SQL,
                 worktableId,
-                product.getElectricityConsumes(),
-                product.getTimeConsumesForOneUnit(),
                 product.getGasConsumes());
     }
 
@@ -125,7 +131,7 @@ public class ProductRepository {
                 addNewTool(product);
                 break;
             case WORKTABLE:
-                switch (product.getTypeOfWork()) {
+                switch (product.getWorktableType()) {
                     case HYDRAULIC:
                         addNewHydraulicWorktable(product);
                         break;
@@ -136,21 +142,18 @@ public class ProductRepository {
                         addNewPlasmicWorktable(product);
                         break;
                     default:
-                        System.out.println("Unsupportable type of worktable " + product.getTypeOfWork());
+                        System.out.println("Unsupportable type of worktable " + product.getWorktableType());
                         break;
                 }
-            default:
-                System.out.println("Unsupportable type of product");
-                break;
         }
     }
 
     public Collection<Product> getAll() {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-            "SELECT tool_types.tool_type_title, T.consumable, T.rechargeable " +
-                    "FROM tool_types " +
-                    "JOIN tools AS T " +
-                    "ON tool_types.tool_type_id = T.tool_type_id ");
+                "SELECT tool_types.tool_type_title, T.consumable, T.rechargeable " +
+                        "FROM tool_types " +
+                        "JOIN tools AS T " +
+                        "ON tool_types.tool_type_id = T.tool_type_id ");
 
         for (Map row : rows) {
             ProductInputDto product = new ProductInputDto();
@@ -160,13 +163,26 @@ public class ProductRepository {
     }
 
     public ProductInputDto getProductById(int input_id) {
-        String GET_BY_ID = "SELECT DISTINCT ON (products.product_id) * " +
-                "FROM products " +
-                "JOIN tools " +
-                "ON products.product_id = ? " +
-                "JOIN tool_types " +
-                "ON tool_types.tool_type_id = tools.tool_type_id ";
+        String GET_BY_ID = "SELECT DISTINCT ON (p.product_id) * " +
+                "FROM products p " +
+                "         LEFT JOIN product_types pt " +
+                "                   ON pt.type_of_product_id = p.type_of_product_id " +
+                "         LEFT JOIN tools t " +
+                "                   ON p.type_of_product_id = 1 AND t.product_id = p.product_id " +
+                "         LEFT JOIN tool_types tt " +
+                "                   ON tt.tool_type_id = t.tool_type_id " +
+                "         JOIN worktables w " +
+                "                   ON p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN worktable_types wt " +
+                "                   ON wt.worktable_type_id = w.worktable_type_id " +
+                "         LEFT JOIN hydraulic_worktables hw " +
+                "                   ON w.worktable_type_id = 1 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN laser_worktables " +
+                "                   ON w.worktable_type_id = 2 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN plasmic_worktables " +
+                "                   ON w.worktable_type_id = 3 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "WHERE p.product_id = ?";
 
-        return jdbcTemplate.queryForObject(GET_BY_ID, new Object[] { input_id }, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(GET_BY_ID, new Object[]{input_id}, new ProductRowMapper());
     }
 }
