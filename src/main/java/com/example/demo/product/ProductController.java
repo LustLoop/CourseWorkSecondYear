@@ -21,9 +21,9 @@ public class ProductController {
         return productService.getAll();
     }
 
-    @GetMapping("/product")
-    public ProductInputDto getProductById() {
-        return productService.getProduct(2);
+    @GetMapping("/getById")
+    public ProductInputDto getProductById(@RequestParam Integer id) {
+        return productService.getProduct(id);
     }
 
     @PostMapping("/add")
@@ -31,8 +31,8 @@ public class ProductController {
         productService.addNewProduct(productInputDto);
     }
 
-    @PostMapping("/delete")
-    public void deleteProduct() {
-        productService.deleteProduct(1);
+    @DeleteMapping("/delete")
+    public void deleteProduct(@RequestParam Integer id) {
+        productService.deleteProduct(id);
     }
 }
