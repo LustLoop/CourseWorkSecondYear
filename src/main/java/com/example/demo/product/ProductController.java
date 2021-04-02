@@ -30,4 +30,9 @@ public class ProductController {
     public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
         productService.addNewProduct(productInputDto);
     }
+
+    @PostMapping("/delete")
+    public void deleteProduct() {
+        productService.deleteProduct(1);
+    }
 }

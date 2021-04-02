@@ -37,26 +37,26 @@ public class ProductRepository {
 
     public int getProductTypeId(String title) {
         String GET_PRODUCT_ID = "SELECT type_of_product_id FROM product_types WHERE type_of_product_title = ?";
-        return (Integer) jdbcTemplate.queryForObject(GET_PRODUCT_ID, new Object[]{title}, Integer.class);
+        return jdbcTemplate.queryForObject(GET_PRODUCT_ID, new Object[]{title}, Integer.class);
     }
 
     public int getWorktableTypeId(String title) {
         String GET_WORKTABLE_ID = "SELECT worktable_type_id FROM worktable_types WHERE worktable_type_title = ?";
-        return (Integer) jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[]{title}, Integer.class);
+        return jdbcTemplate.queryForObject(GET_WORKTABLE_ID, new Object[]{title}, Integer.class);
     }
 
     public int getToolTypeId(String title) {
         String GET_TOOL_ID = "SELECT tool_type_id FROM tool_types WHERE tool_type_title = ?";
-        return (Integer) jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[]{title}, Integer.class);
+        return jdbcTemplate.queryForObject(GET_TOOL_ID, new Object[]{title}, Integer.class);
     }
 
-    public int addNewTool(ProductInputDto product) {
+    public void addNewTool(ProductInputDto product) {
         int productId = addNewProduct(product);
 
         String INSERT_WORKTABLE_SQL = "INSERT INTO tools (product_id, tool_type_id, consumable, rechargeable) " +
                 "VALUES (?,?,?,?)";
 
-        return jdbcTemplate.update(INSERT_WORKTABLE_SQL,
+        jdbcTemplate.update(INSERT_WORKTABLE_SQL,
                 productId,
                 getToolTypeId(product.getToolType().name()),
                 product.isConsumable(),
@@ -85,38 +85,38 @@ public class ProductRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public int addNewHydraulicWorktable(ProductInputDto product) {
+    public void addNewHydraulicWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
         String INSERT_HYDRAULIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
                 "(worktable_id) " +
                 "VALUES (?)";
 
-        return jdbcTemplate.update(INSERT_HYDRAULIC_WORKTABLE_SQL,
+        jdbcTemplate.update(INSERT_HYDRAULIC_WORKTABLE_SQL,
                 worktableId);
     }
 
-    public int addNewLaserWorktable(ProductInputDto product) {
+    public void addNewLaserWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
         String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables " +
                 "(worktable_id, cartridge_consumes, cartridge_usage_times) " +
                 "VALUES (?,?,?)";
 
-        return jdbcTemplate.update(INSERT_LASER_WORKTABLE_SQL,
+        jdbcTemplate.update(INSERT_LASER_WORKTABLE_SQL,
                 worktableId,
                 product.getCartridgeConsumes(),
                 product.getCartridgeUsageTimes());
     }
 
-    public int addNewPlasmicWorktable(ProductInputDto product) {
+    public void addNewPlasmicWorktable(ProductInputDto product) {
         int worktableId = addNewWorktable(product);
 
-        String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
-                "(worktable_id, electricity_consumes, time_consumes_for_one_unit, gas_consumes) " +
+        String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO plasmic_worktables " +
+                "(worktable_id, gas_consumes) " +
                 "VALUES (?,?)";
 
-        return jdbcTemplate.update(INSERT_PLASMIC_WORKTABLE_SQL,
+        jdbcTemplate.update(INSERT_PLASMIC_WORKTABLE_SQL,
                 worktableId,
                 product.getGasConsumes());
     }
@@ -188,5 +188,10 @@ public class ProductRepository {
                 "WHERE p.product_id = ?";
 
         return jdbcTemplate.queryForObject(GET_BY_ID, new Object[]{input_id}, new ProductRowMapper());
+    }
+
+    public void deleteProductById(int input_id) {
+        String DELETE_BY_ID = "DELETE FROM products WHERE product_id = ?";
+        jdbcTemplate.update(DELETE_BY_ID, input_id);
     }
 }

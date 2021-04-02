@@ -9,7 +9,7 @@ CREATE TABLE products (
 	price DECIMAL,
 	energy_resource VARCHAR ( 250 ) NOT NULL,
 	accuracy VARCHAR ( 250 ) NOT NULL,
-	type_of_product_id INT REFERENCES product_types (type_of_product_id)
+	type_of_product_id INT REFERENCES product_types (type_of_product_id) ON DELETE CASCADE
 );
 
 CREATE TABLE tool_types (
@@ -19,8 +19,8 @@ CREATE TABLE tool_types (
 
 CREATE TABLE tools (
     tool_id SERIAL PRIMARY KEY,
-	product_id INT REFERENCES products (product_id),
-	tool_type_id INT REFERENCES tool_types (tool_type_id),
+	product_id INT REFERENCES products (product_id) ON DELETE CASCADE,
+	tool_type_id INT REFERENCES tool_types (tool_type_id) ON DELETE CASCADE,
 	consumable BOOLEAN,
 	rechargeable BOOLEAN
 );
@@ -32,8 +32,8 @@ CREATE TABLE worktable_types (
 
 CREATE TABLE worktables (
 	worktable_id SERIAL PRIMARY KEY,
-    product_id INT REFERENCES products (product_id),
-    worktable_type_id INT REFERENCES worktable_types (worktable_type_id),
+    product_id INT REFERENCES products (product_id) ON DELETE CASCADE,
+    worktable_type_id INT REFERENCES worktable_types (worktable_type_id) ON DELETE CASCADE,
     portable BOOLEAN,
     electricity_consumes DECIMAL,
     time_consumes_for_one_unit DECIMAL
@@ -41,19 +41,19 @@ CREATE TABLE worktables (
 
 CREATE TABLE hydraulic_worktables (
 	hydraulic_worktable_id SERIAL PRIMARY KEY,
-	worktable_id INT REFERENCES worktables (worktable_id)
+	worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE
 );
 
 CREATE TABLE laser_worktables (
 	laser_worktable_id SERIAL PRIMARY KEY,
-    worktable_id INT REFERENCES worktables (worktable_id),
+    worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE,
     cartridge_consumes DECIMAL,
     cartridge_usage_times INT
 );
 
 CREATE TABLE plasmic_worktables (
 	plasmic_worktable_id SERIAL PRIMARY KEY,
-    worktable_id INT REFERENCES worktables (worktable_id),
+    worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE,
     gas_consumes DECIMAL
 );
 
@@ -65,45 +65,8 @@ INSERT INTO worktable_types (worktable_type_title) VALUES
 INSERT INTO tool_types (tool_type_title) VALUES
     ('HAND_TOOL'),
     ('MARKUP_TOOL'),
-    ('MEASURING_TOOL'),
-    ('OTHER');
+    ('MEASURING_TOOL');
 
 INSERT INTO product_types (type_of_product_title) VALUES
     ('TOOL'),
     ('WORKTABLE');
-
-SELECT tool_types.title
-    FROM tool_types
-    JOIN tools
-    ON tool_types.tool_type_id = tools.tool_type_id;
-    
-    
-SELECT DISTINCT ON (products.product_id) *
-    FROM products
-    JOIN product_types
-    ON product_types.type_of_product_id = products.type_of_product_id
-    JOIN tools
-    ON products.product_id = 1
-    JOIN tool_types;
-
-
-// Works only on tools
-
-SELECT DISTINCT ON (products.product_id) *
-    FROM products
-    JOIN product_types
-    ON product_types.type_of_product_id = products.type_of_product_id
-    JOIN tools
-    ON product_types.type_of_product_title = 'TOOL' AND products.product_id = 1
-        JOIN tool_types
-        ON product_types.type_of_product_title = 'TOOL' AND tool_types.tool_type_id = tools.tool_type_id;
-    JOIN worktables
-    ON product_types.type_of_product_title = 'WORKTABLE' AND products.product_id = 1
-        JOIN worktable_types
-        ON product_types.type_of_product_title = 'WORKTABLE' AND worktable_types.worktable_type_id = worktables.worktable_type_id
-            JOIN hydraulic_worktables
-            ON product_types.type_of_product_title = 'WORKTABLE' AND worktable_types.worktable_type_title = 'HYDRAULIC'
-            JOIN laser_worktables
-            ON product_types.type_of_product_title = 'WORKTABLE' AND worktable_types.worktable_type_title = 'LASER'
-            JOIN plasmic_worktables
-            ON product_types.type_of_product_title = 'WORKTABLE' AND worktable_types.worktable_type_title = 'PLASMIC';

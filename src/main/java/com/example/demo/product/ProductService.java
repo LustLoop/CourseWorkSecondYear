@@ -24,4 +24,8 @@ public class ProductService {
     public ProductInputDto getProduct(int id) {
         return productRepository.getProductById(id);
     }
+
+    public void deleteProduct(int id) {
+        productRepository.deleteProductById(id);
+    }
 }
