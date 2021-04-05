@@ -21,17 +21,17 @@ public class ProductController {
         return productService.getAll();
     }
 
-    @GetMapping("/getById")
+    @GetMapping
     public ProductInputDto getProductById(@RequestParam Integer id) {
         return productService.getProduct(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
         productService.addNewProduct(productInputDto);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public void deleteProduct(@RequestParam Integer id) {
         productService.deleteProduct(id);
     }
