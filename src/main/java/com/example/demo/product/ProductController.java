@@ -16,18 +16,23 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @RequestMapping
-//    public Collection<Product> getAllProducts() {
-//        return productService.getAllProducts();
-//    }
-//
-    @PostMapping("/add")
+    @GetMapping
+    public Collection<ProductInputDto> getAll() {
+        return productService.getAll();
+    }
+
+    @GetMapping("/id")
+    public ProductInputDto getProductById(@RequestParam Integer id) {
+        return productService.getProduct(id);
+    }
+
+    @PostMapping
     public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
         productService.addNewProduct(productInputDto);
     }
-//
-//    @GetMapping("/test")
-//    public Collection<Product> test() {
-//        return productService.test();
-//    }
+
+    @DeleteMapping
+    public void deleteProduct(@RequestParam Integer id) {
+        productService.deleteProduct(id);
+    }
 }

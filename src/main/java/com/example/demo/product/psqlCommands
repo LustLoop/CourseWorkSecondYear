@@ -1,52 +1,72 @@
+CREATE TABLE product_types (
+    type_of_product_id SERIAL PRIMARY KEY,
+    type_of_product_title VARCHAR ( 50 ) UNIQUE NOT NULL
+);
+
 CREATE TABLE products (
 	product_id SERIAL PRIMARY KEY,
 	title VARCHAR ( 250 ) NOT NULL,
-	price MONEY,
+	price DECIMAL,
 	energy_resource VARCHAR ( 250 ) NOT NULL,
-	accuracy VARCHAR ( 250 ) NOT NULL
+	accuracy VARCHAR ( 250 ) NOT NULL,
+	type_of_product_id INT REFERENCES product_types (type_of_product_id) ON DELETE CASCADE
 );
 
-//add toolType later
+CREATE TABLE tool_types (
+	tool_type_id SERIAL PRIMARY KEY,
+	tool_type_title VARCHAR ( 50 ) UNIQUE NOT NULL
+);
 
 CREATE TABLE tools (
     tool_id SERIAL PRIMARY KEY,
-	product_id INT REFERENCES products (product_id),
+	product_id INT REFERENCES products (product_id) ON DELETE CASCADE,
+	tool_type_id INT REFERENCES tool_types (tool_type_id) ON DELETE CASCADE,
 	consumable BOOLEAN,
 	rechargeable BOOLEAN
 );
 
 CREATE TABLE worktable_types (
 	worktable_type_id SERIAL PRIMARY KEY,
-	title VARCHAR ( 50 ) UNIQUE NOT NULL
+	worktable_type_title VARCHAR ( 50 ) UNIQUE NOT NULL
 );
 
 CREATE TABLE worktables (
 	worktable_id SERIAL PRIMARY KEY,
-    product_id INT REFERENCES products (product_id),
-    worktable_type_id INT REFERENCES worktable_types (worktable_type_id),
-    portable BOOLEAN
+    product_id INT REFERENCES products (product_id) ON DELETE CASCADE,
+    worktable_type_id INT REFERENCES worktable_types (worktable_type_id) ON DELETE CASCADE,
+    portable BOOLEAN,
+    electricity_consumes DECIMAL,
+    time_consumes_for_one_unit DECIMAL
 );
 
 CREATE TABLE hydraulic_worktables (
 	hydraulic_worktable_id SERIAL PRIMARY KEY,
-	worktable_id INT REFERENCES worktables (worktable_id),
-	electricity_consumes MONEY,
-	time_consumes_for_one_unit MONEY
+	worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE
 );
 
 CREATE TABLE laser_worktables (
 	laser_worktable_id SERIAL PRIMARY KEY,
-    worktable_id INT REFERENCES worktables (worktable_id),
-    electricity_consumes MONEY,
-    cartridge_consumes MONEY,
-    cartridge_usage_times INT,
-    time_consumes_for_one_unit MONEY
+    worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE,
+    cartridge_consumes DECIMAL,
+    cartridge_usage_times INT
 );
 
 CREATE TABLE plasmic_worktables (
 	plasmic_worktable_id SERIAL PRIMARY KEY,
-    worktable_id INT REFERENCES worktables (worktable_id),
-    electricity_consumes MONEY,
-    gas_consumes MONEY,
-    time_consumes_for_one_unit MONEY
+    worktable_id INT REFERENCES worktables (worktable_id) ON DELETE CASCADE,
+    gas_consumes DECIMAL
 );
+
+INSERT INTO worktable_types (worktable_type_title) VALUES
+    ('HYDRAULIC'),
+    ('LASER'),
+    ('PLASMIC');
+
+INSERT INTO tool_types (tool_type_title) VALUES
+    ('HAND_TOOL'),
+    ('MARKUP_TOOL'),
+    ('MEASURING_TOOL');
+
+INSERT INTO product_types (type_of_product_title) VALUES
+    ('TOOL'),
+    ('WORKTABLE');

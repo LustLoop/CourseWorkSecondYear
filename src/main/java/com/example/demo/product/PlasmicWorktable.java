@@ -13,22 +13,13 @@ public class PlasmicWorktable extends Worktable {
                             BigDecimal price,
                             String energyResource,
                             String accuracy,
-                            WorktableType worktableType,
-                            boolean portable) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
-    }
-
-    public PlasmicWorktable(Integer id,
-                            String title,
-                            BigDecimal price,
-                            String energyResource,
-                            String accuracy,
+                            TypeOfProduct typeOfProduct,
                             WorktableType worktableType,
                             boolean portable,
                             BigDecimal electricityConsumes,
                             BigDecimal gasConsumes,
                             BigDecimal timeConsumesForOneUnit) {
-        super(id, title, price, energyResource, accuracy, worktableType, portable);
+        super(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
         this.electricityConsumes = electricityConsumes;
         this.gasConsumes = gasConsumes;
         this.timeConsumesForOneUnit = timeConsumesForOneUnit;
