@@ -21,7 +21,7 @@ public class ProductController {
         return productService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/id")
     public ProductInputDto getProductById(@RequestParam Integer id) {
         return productService.getProduct(id);
     }
