@@ -16,21 +16,25 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @CrossOrigin
     @GetMapping
     public Collection<ProductInputDto> getAll() {
         return productService.getAll();
     }
 
-    @GetMapping("/id")
-    public ProductInputDto getProductById(@RequestParam Integer id) {
+    @CrossOrigin
+    @GetMapping("/product")
+    public ProductInputDto getProductById(@RequestParam int id) {
         return productService.getProduct(id);
     }
 
+    @CrossOrigin
     @PostMapping
     public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
         productService.addNewProduct(productInputDto);
     }
 
+    @CrossOrigin
     @DeleteMapping
     public void deleteProduct(@RequestParam Integer id) {
         productService.deleteProduct(id);
