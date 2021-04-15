@@ -29,9 +29,16 @@ public class ProductController {
     }
 
     @CrossOrigin
+    @GetMapping("/page")
+    public Collection<ProductInputDto> getProductsOfPage(@RequestParam int id) {
+        return productService.getProductsOfPage(id);
+    }
+
+    @CrossOrigin
     @PostMapping
-    public void addNewProduct(@RequestBody ProductInputDto productInputDto) {
-        productService.addNewProduct(productInputDto);
+    public ProductInputDto addNewProduct(@RequestBody ProductInputDto productInputDto) {
+        int productId = productService.addNewProduct(productInputDto);
+        return productService.getProduct(productId);
     }
 
     @CrossOrigin

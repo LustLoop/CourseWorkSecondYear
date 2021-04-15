@@ -13,8 +13,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void addNewProduct(ProductInputDto product) {
-        productRepository.add(product);
+    public int addNewProduct(ProductInputDto product) {
+        return productRepository.add(product);
     }
 
     public Collection<ProductInputDto> getAll() {
@@ -23,6 +23,10 @@ public class ProductService {
 
     public ProductInputDto getProduct(int id) {
         return productRepository.getProductById(id);
+    }
+
+    public Collection<ProductInputDto> getProductsOfPage(int pageId) {
+        return productRepository.getProductsOfPage(pageId);
     }
 
     public void deleteProduct(int id) {
