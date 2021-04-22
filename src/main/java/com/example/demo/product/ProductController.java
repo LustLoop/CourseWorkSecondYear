@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collection;
 
 @CrossOrigin
@@ -36,8 +35,9 @@ public class ProductController {
                                                          @RequestParam(required = false)String title,
                                                          @RequestParam(required = false) String[] types,
                                                          @RequestParam(required = false) BigDecimal startPriceRange,
-                                                         @RequestParam(required = false) BigDecimal endPriceRange) {
-        System.out.println(Arrays.toString(types));
+                                                         @RequestParam(required = false) BigDecimal endPriceRange,
+                                                         @RequestParam String sortType) {
+        System.out.println(sortType);
         return productService.getProductsOfPage(id, new Filters(title, types, startPriceRange, endPriceRange));
     }
 

@@ -229,9 +229,22 @@ public class ProductRepository {
     }
 
     public String addExistingFilters(Filters filters) {
-        String filterStatement = "WHERE true";
+        String filterStatement = "WHERE true ";
         if (filters.getTitle() != null) {
-            filterStatement += " AND p.title LIKE '%' || '" + filters.getTitle() + "' || '%' ";
+            filterStatement += "AND p.title LIKE '%' || '" + filters.getTitle() + "' || '%' ";
+        }
+        if (filters.getTypes() != null) {
+            String typeIndexes = "";
+            for (String type : filters.getTypes()) {
+                if (typeIndexes != "") {
+                    typeIndexes +=", ";
+                }
+                typeIndexes += type;
+            }
+            filterStatement += "AND p.type_of_product_id IN (" + typeIndexes + ") ";
+        }
+        if (filters.getStartPriceRange() != null && filters.getEndPriceRange() != null) {
+            filterStatement += "AND p.price > " + filters.getStartPriceRange() + "  AND p.price < " + filters.getEndPriceRange() + " ";
         }
         return filterStatement;
     }
