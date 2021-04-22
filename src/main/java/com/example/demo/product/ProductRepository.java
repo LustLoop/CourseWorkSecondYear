@@ -173,7 +173,8 @@ public class ProductRepository {
         return jdbcTemplate.query(GET_ALL, new Object[]{}, new ProductRowMapper());
     }
 
-    public Collection<ProductInputDto> getProductsOfPage(int pageId) {
+    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters) {
+        String filterStatement = addExistingFilters(filters);
         String GET_PRODUCTS_OF_PAGE = "SELECT DISTINCT ON (p.product_id) * " +
                 "FROM products p " +
                 "         LEFT JOIN product_types pt " +
@@ -192,6 +193,7 @@ public class ProductRepository {
                 "                   ON w.worktable_type_id = 2 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
                 "         LEFT JOIN plasmic_worktables " +
                 "                   ON w.worktable_type_id = 3 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                filterStatement +
                 "ORDER BY p.product_id " +
                 "LIMIT 6 OFFSET 6 * (? - 1)";
         return jdbcTemplate.query(GET_PRODUCTS_OF_PAGE, new Object[]{pageId}, new ProductRowMapper());
@@ -224,5 +226,13 @@ public class ProductRepository {
     public void deleteProductById(int input_id) {
         String DELETE_BY_ID = "DELETE FROM products WHERE product_id = ?";
         jdbcTemplate.update(DELETE_BY_ID, input_id);
+    }
+
+    public String addExistingFilters(Filters filters) {
+        String filterStatement = "WHERE true";
+        if (filters.getTitle() != null) {
+            filterStatement += " AND p.title LIKE '%' || '" + filters.getTitle() + "' || '%' ";
+        }
+        return filterStatement;
     }
 }

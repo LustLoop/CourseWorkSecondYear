@@ -3,6 +3,8 @@ package com.example.demo.product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collection;
 
 @CrossOrigin
@@ -30,8 +32,13 @@ public class ProductController {
 
     @CrossOrigin
     @GetMapping("/page")
-    public Collection<ProductInputDto> getProductsOfPage(@RequestParam int id) {
-        return productService.getProductsOfPage(id);
+    public Collection<ProductInputDto> getProductsOfPage(@RequestParam int id,
+                                                         @RequestParam(required = false)String title,
+                                                         @RequestParam(required = false) String[] types,
+                                                         @RequestParam(required = false) BigDecimal startPriceRange,
+                                                         @RequestParam(required = false) BigDecimal endPriceRange) {
+        System.out.println(Arrays.toString(types));
+        return productService.getProductsOfPage(id, new Filters(title, types, startPriceRange, endPriceRange));
     }
 
     @CrossOrigin

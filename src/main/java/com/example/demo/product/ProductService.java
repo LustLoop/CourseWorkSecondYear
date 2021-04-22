@@ -2,6 +2,7 @@ package com.example.demo.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 
 @Service
@@ -25,8 +26,8 @@ public class ProductService {
         return productRepository.getProductById(id);
     }
 
-    public Collection<ProductInputDto> getProductsOfPage(int pageId) {
-        return productRepository.getProductsOfPage(pageId);
+    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters) {
+        return productRepository.getProductsOfPage(pageId, filters);
     }
 
     public void deleteProduct(int id) {
