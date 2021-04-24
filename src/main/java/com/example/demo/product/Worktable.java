@@ -5,27 +5,36 @@ import java.math.BigDecimal;
 public class Worktable extends Product implements CountableEfficiency {
     private WorktableType worktableType;
     private boolean portable;
+    private BigDecimal efficiency;
+    private BigDecimal electricityConsumes;
+    private BigDecimal timeConsumesForOneUnit;
 
     public Worktable(Integer id,
                      String title,
+                     String description,
                      BigDecimal price,
                      String energyResource,
                      String accuracy,
                      TypeOfProduct typeOfProduct) {
-        super(id, title, price, energyResource, accuracy, typeOfProduct);
+        super(id, title, description, price, energyResource, accuracy, typeOfProduct);
     }
 
     public Worktable(Integer id,
                      String title,
+                     String description,
                      BigDecimal price,
                      String energyResource,
                      String accuracy,
                      TypeOfProduct typeOfProduct,
                      WorktableType worktableType,
-                     boolean portable) {
-        super(id, title, price, energyResource, accuracy, typeOfProduct);
+                     boolean portable,
+                     BigDecimal electricityConsumes,
+                     BigDecimal timeConsumesForOneUnit) {
+        super(id, title, description, price, energyResource, accuracy, typeOfProduct);
         this.worktableType = worktableType;
         this.portable = portable;
+        this.electricityConsumes = electricityConsumes;
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
     }
 
     public boolean isPortable() {
@@ -44,8 +53,31 @@ public class Worktable extends Product implements CountableEfficiency {
         this.worktableType = worktableType;
     }
 
+    public BigDecimal getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(BigDecimal efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public BigDecimal getElectricityConsumes() {
+        return electricityConsumes;
+    }
+
+    public void setElectricityConsumes(BigDecimal electricityConsumes) {
+        this.electricityConsumes = electricityConsumes;
+    }
+
+    public BigDecimal getTimeConsumesForOneUnit() {
+        return timeConsumesForOneUnit;
+    }
+
+    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
+        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
+    }
+
     @Override
-    public BigDecimal countEfficiency() {
-        return null;
+    public void countEfficiency() {
     }
 }

@@ -13,7 +13,9 @@ public class ProductRowMapper implements RowMapper<ProductInputDto> {
 
         product.setId(rs.getInt("product_id"));
         product.setTitle(rs.getString("title"));
+        product.setDescription(rs.getString("description"));
         product.setPrice(rs.getBigDecimal("price"));
+        product.setEfficiency(rs.getBigDecimal("efficiency"));
         product.setEnergyResource(rs.getString("energy_resource"));
         product.setAccuracy(rs.getString("accuracy"));
         product.setTypeOfProduct(TypeOfProduct.valueOf(rs.getString("type_of_product_title")));
@@ -25,20 +27,16 @@ public class ProductRowMapper implements RowMapper<ProductInputDto> {
         } else if (product.getTypeOfProduct().name().equals("WORKTABLE")) {
             product.setPortable(rs.getBoolean("portable"));
             product.setWorktableType(WorktableType.valueOf(rs.getString("worktable_type_title")));
+            product.setElectricityConsumes(rs.getBigDecimal("electricity_consumes"));
+            product.setTimeConsumesForOneUnit(rs.getBigDecimal("time_consumes_for_one_unit"));
             switch (product.getWorktableType().name()) {
                 case "HYDRAULIC":
-                    product.setElectricityConsumes(rs.getBigDecimal("electricity_consumes"));
-                    product.setTimeConsumesForOneUnit(rs.getBigDecimal("time_consumes_for_one_unit"));
                     break;
                 case "LASER":
-                    product.setElectricityConsumes(rs.getBigDecimal("electricity_consumes"));
-                    product.setTimeConsumesForOneUnit(rs.getBigDecimal("time_consumes_for_one_unit"));
                     product.setCartridgeConsumes(rs.getBigDecimal("cartridge_consumes"));
                     product.setCartridgeUsageTimes(rs.getBigDecimal("cartridge_usage_times"));
                     break;
                 case "PLASMIC":
-                    product.setElectricityConsumes(rs.getBigDecimal("electricity_consumes"));
-                    product.setTimeConsumesForOneUnit(rs.getBigDecimal("time_consumes_for_one_unit"));
                     product.setGasConsumes(rs.getBigDecimal("gas_consumes"));
                     break;
                 default:

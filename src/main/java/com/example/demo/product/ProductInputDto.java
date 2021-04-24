@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 public class ProductInputDto {
     private Integer id;
     private String title;
+    private String description;
     private BigDecimal price;
+    private BigDecimal efficiency;
     private String energyResource;
     private String accuracy;
     private ToolType toolType;
@@ -25,7 +27,9 @@ public class ProductInputDto {
 
     public ProductInputDto(Integer id,
                            String title,
+                           String description,
                            BigDecimal price,
+                           BigDecimal efficiency,
                            String energyResource,
                            String accuracy,
                            ToolType toolType,
@@ -41,7 +45,9 @@ public class ProductInputDto {
                            BigDecimal gasConsumes) {
         this.id = id;
         this.title = title;
+        this.description = description;
         this.price = price;
+        this.efficiency = efficiency;
         this.energyResource = energyResource;
         this.accuracy = accuracy;
         this.toolType = toolType;
@@ -185,14 +191,39 @@ public class ProductInputDto {
         this.gasConsumes = gasConsumes;
     }
 
-    public Product convertToProduct() {
-        switch (typeOfProduct) {
-            case TOOL:
-                return new Tool(id, title, price, energyResource, accuracy, typeOfProduct, toolType, consumable, rechargeable);
-            case WORKTABLE:
-                return new Worktable(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
-            default:
-                throw new IncorrectProductTypeException("Incorrect type of product :" + typeOfProduct);
-        }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(BigDecimal efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public Product convertToTool() {
+        return new Tool(id, title, description, price, energyResource, accuracy, typeOfProduct);
+    }
+
+    public Product convertToWorktable() {
+        return new Tool(id, title, description, price, energyResource, accuracy, typeOfProduct, toolType, consumable, rechargeable);
+    }
+
+    public HydraulicWorktable convertToHydraulicWorktable() {
+        return new HydraulicWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
+    }
+
+    public LaserWorktable convertToLaserWorktable() {
+        return new LaserWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, cartridgeConsumes, cartridgeUsageTimes);
+    }
+
+    public PlasmicWorktable convertToPlasmicWorktable() {
+        return new PlasmicWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, gasConsumes);
     }
 }

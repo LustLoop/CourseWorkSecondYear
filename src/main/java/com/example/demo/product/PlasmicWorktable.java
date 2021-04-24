@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class PlasmicWorktable extends Worktable {
-    private BigDecimal electricityConsumes;
     private BigDecimal gasConsumes;
-    private BigDecimal timeConsumesForOneUnit;
 
     public PlasmicWorktable(Integer id,
                             String title,
+                            String description,
                             BigDecimal price,
                             String energyResource,
                             String accuracy,
@@ -17,20 +16,11 @@ public class PlasmicWorktable extends Worktable {
                             WorktableType worktableType,
                             boolean portable,
                             BigDecimal electricityConsumes,
-                            BigDecimal gasConsumes,
-                            BigDecimal timeConsumesForOneUnit) {
-        super(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
-        this.electricityConsumes = electricityConsumes;
+                            BigDecimal timeConsumesForOneUnit,
+                            BigDecimal gasConsumes) {
+        super(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
         this.gasConsumes = gasConsumes;
-        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
-    }
-
-    public BigDecimal getElectricityConsumes() {
-        return electricityConsumes;
-    }
-
-    public void setElectricityConsumes(BigDecimal electricityConsumes) {
-        this.electricityConsumes = electricityConsumes;
+        countEfficiency();
     }
 
     public BigDecimal getGasConsumes() {
@@ -41,16 +31,9 @@ public class PlasmicWorktable extends Worktable {
         this.gasConsumes = gasConsumes;
     }
 
-    public BigDecimal getTimeConsumesForOneUnit() {
-        return timeConsumesForOneUnit;
-    }
-
-    public void setTimeConsumesForOneUnit(BigDecimal timeConsumesForOneUnit) {
-        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
-    }
-
     @Override
-    public BigDecimal countEfficiency() {
-        return (electricityConsumes.add(gasConsumes)).divide(timeConsumesForOneUnit, 2, RoundingMode.CEILING);
+    public void countEfficiency() {
+        System.out.println("shit");
+        this.setEfficiency((this.getElectricityConsumes().add(gasConsumes)).divide(this.getTimeConsumesForOneUnit(), 2, RoundingMode.CEILING));
     }
 }

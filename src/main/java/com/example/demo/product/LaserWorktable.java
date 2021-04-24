@@ -4,13 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class LaserWorktable extends Worktable {
-    private BigDecimal electricityConsumes;
     private BigDecimal cartridgeConsumes;
     private BigDecimal cartridgeUsageTimes;
-    private BigDecimal timeConsumesForOneUnit;
 
     public LaserWorktable(Integer id,
                           String title,
+                          String description,
                           BigDecimal price,
                           String energyResource,
                           String accuracy,
@@ -18,22 +17,13 @@ public class LaserWorktable extends Worktable {
                           WorktableType worktableType,
                           boolean portable,
                           BigDecimal electricityConsumes,
+                          BigDecimal timeConsumesForOneUnit,
                           BigDecimal cartridgeConsumes,
-                          BigDecimal cartridgeUsageTimes,
-                          BigDecimal timeConsumesForOneUnit) {
-        super(id, title, price, energyResource, accuracy, typeOfProduct, worktableType, portable);
-        this.electricityConsumes = electricityConsumes;
+                          BigDecimal cartridgeUsageTimes) {
+        super(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
         this.cartridgeConsumes = cartridgeConsumes;
         this.cartridgeUsageTimes = cartridgeUsageTimes;
-        this.timeConsumesForOneUnit = timeConsumesForOneUnit;
-    }
-
-    public BigDecimal getElectricityConsumes() {
-        return electricityConsumes;
-    }
-
-    public void setElectricityConsumes(BigDecimal electricityConsumes) {
-        this.electricityConsumes = electricityConsumes;
+        countEfficiency();
     }
 
     public BigDecimal getCartridgeConsumes() {
@@ -53,8 +43,8 @@ public class LaserWorktable extends Worktable {
     }
 
     @Override
-    public BigDecimal countEfficiency() {
-        return (electricityConsumes.add(cartridgeConsumes.divide(cartridgeUsageTimes, 2, RoundingMode.CEILING)))
-                .divide(timeConsumesForOneUnit, 2, RoundingMode.CEILING);
+    public void countEfficiency() {
+        this.setEfficiency((this.getElectricityConsumes().add(cartridgeConsumes.divide(cartridgeUsageTimes, 2, RoundingMode.CEILING)))
+                .divide(this.getTimeConsumesForOneUnit(), 2, RoundingMode.CEILING));
     }
 }
