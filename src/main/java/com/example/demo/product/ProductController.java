@@ -37,8 +37,7 @@ public class ProductController {
                                                          @RequestParam(required = false) BigDecimal startPriceRange,
                                                          @RequestParam(required = false) BigDecimal endPriceRange,
                                                          @RequestParam String sortType) {
-        System.out.println(sortType);
-        return productService.getProductsOfPage(id, new Filters(title, types, startPriceRange, endPriceRange));
+        return productService.getProductsOfPage(id, new Filters(title, types, startPriceRange, endPriceRange), sortType);
     }
 
     @CrossOrigin

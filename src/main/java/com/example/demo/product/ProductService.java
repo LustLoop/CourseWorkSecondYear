@@ -26,8 +26,8 @@ public class ProductService {
         return productRepository.getProductById(id);
     }
 
-    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters) {
-        return productRepository.getProductsOfPage(pageId, filters);
+    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters, String sortType) {
+        return productRepository.getProductsOfPage(pageId, filters, sortType);
     }
 
     public void deleteProduct(int id) {

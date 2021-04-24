@@ -16,19 +16,21 @@ public class ProductRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int addNewProduct(ProductInputDto product) {
-        String INSERT_PRODUCT_SQL = "INSERT INTO products (title, price, energy_resource, accuracy, type_of_product_id)" +
-                " VALUES (?,?,?,?,?)";
+    public int addNewProduct(Product product) {
+        String INSERT_PRODUCT_SQL = "INSERT INTO " +
+                "products (title, description, price, energy_resource, accuracy, type_of_product_id)" +
+                " VALUES (?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_PRODUCT_SQL, new String[]{"product_id"});
             ps.setString(1, product.getTitle());
-            ps.setBigDecimal(2, product.getPrice());
-            ps.setString(3, product.getEnergyResource());
-            ps.setString(4, product.getAccuracy());
-            ps.setInt(5, getProductTypeId(product.getTypeOfProduct().name()));
+            ps.setString(2, product.getDescription());
+            ps.setBigDecimal(3, product.getPrice());
+            ps.setString(4, product.getEnergyResource());
+            ps.setString(5, product.getAccuracy());
+            ps.setInt(6, getProductTypeId(product.getTypeOfProduct().name()));
             return ps;
         }, keyHolder);
 
@@ -51,7 +53,7 @@ public class ProductRepository {
     }
 
     public int addNewTool(ProductInputDto product) {
-        int productId = addNewProduct(product);
+        int productId = addNewProduct(product.convertToTool());
 
         String INSERT_WORKTABLE_SQL = "INSERT INTO tools (product_id, tool_type_id, consumable, rechargeable) " +
                 "VALUES (?,?,?,?)";
@@ -64,20 +66,21 @@ public class ProductRepository {
         return productId;
     }
 
-    public int addNewWorktable(ProductInputDto product, int productId) {
+    public int addNewWorktable(Worktable worktable, int productId) {
         String INSERT_WORKTABLE_SQL = "INSERT INTO worktables " +
-                "(product_id, worktable_type_id, portable, electricity_consumes, time_consumes_for_one_unit) " +
-                "VALUES (?,?,?,?,?)";
+                "(product_id, worktable_type_id, efficiency, portable, electricity_consumes, time_consumes_for_one_unit) " +
+                "VALUES (?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_WORKTABLE_SQL, new String[]{"worktable_id"});
             ps.setInt(1, productId);
-            ps.setInt(2, getWorktableTypeId(product.getWorktableType().name()));
-            ps.setBoolean(3, product.isPortable());
-            ps.setBigDecimal(4, product.getElectricityConsumes());
-            ps.setBigDecimal(5, product.getTimeConsumesForOneUnit());
+            ps.setInt(2, getWorktableTypeId(worktable.getWorktableType().name()));
+            ps.setBigDecimal(3, worktable.getEfficiency());
+            ps.setBoolean(4, worktable.isPortable());
+            ps.setBigDecimal(5, worktable.getElectricityConsumes());
+            ps.setBigDecimal(6, worktable.getTimeConsumesForOneUnit());
             return ps;
         }, keyHolder);
 
@@ -85,8 +88,9 @@ public class ProductRepository {
     }
 
     public int addNewHydraulicWorktable(ProductInputDto product) {
-        int productId = addNewProduct(product);
-        int worktableId = addNewWorktable(product, productId);
+        HydraulicWorktable hw = product.convertToHydraulicWorktable();
+        int productId = addNewProduct(hw);
+        int worktableId = addNewWorktable(hw, productId);
 
         String INSERT_HYDRAULIC_WORKTABLE_SQL = "INSERT INTO hydraulic_worktables " +
                 "(worktable_id) " +
@@ -99,8 +103,9 @@ public class ProductRepository {
     }
 
     public int addNewLaserWorktable(ProductInputDto product) {
-        int productId = addNewProduct(product);
-        int worktableId = addNewWorktable(product, productId);
+        LaserWorktable lw = product.convertToLaserWorktable();
+        int productId = addNewProduct(lw);
+        int worktableId = addNewWorktable(lw, productId);
 
         String INSERT_LASER_WORKTABLE_SQL = "INSERT INTO laser_worktables " +
                 "(worktable_id, cartridge_consumes, cartridge_usage_times) " +
@@ -114,8 +119,9 @@ public class ProductRepository {
     }
 
     public int addNewPlasmicWorktable(ProductInputDto product) {
-        int productId = addNewProduct(product);
-        int worktableId = addNewWorktable(product, productId);
+        PlasmicWorktable pw = product.convertToPlasmicWorktable();
+        int productId = addNewProduct(pw);
+        int worktableId = addNewWorktable(pw, productId);
 
         String INSERT_PLASMIC_WORKTABLE_SQL = "INSERT INTO plasmic_worktables " +
                 "(worktable_id, gas_consumes) " +
@@ -173,9 +179,9 @@ public class ProductRepository {
         return jdbcTemplate.query(GET_ALL, new Object[]{}, new ProductRowMapper());
     }
 
-    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters) {
-        String filterStatement = addExistingFilters(filters);
-        String GET_PRODUCTS_OF_PAGE = "SELECT DISTINCT ON (p.product_id) * " +
+    public Collection<ProductInputDto> getProductsOfPage(int pageId, Filters filters, String sortType) {
+        String GET_PRODUCTS_OF_PAGE = "SELECT * FROM (" +
+                "SELECT DISTINCT ON (p.product_id) * " +
                 "FROM products p " +
                 "         LEFT JOIN product_types pt " +
                 "                   ON pt.type_of_product_id = p.type_of_product_id " +
@@ -193,9 +199,10 @@ public class ProductRepository {
                 "                   ON w.worktable_type_id = 2 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
                 "         LEFT JOIN plasmic_worktables " +
                 "                   ON w.worktable_type_id = 3 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
-                filterStatement +
-                "ORDER BY p.product_id " +
-                "LIMIT 6 OFFSET 6 * (? - 1)";
+                addExistingFilters(filters) +
+                ") r " +
+                addSorting(sortType) +
+                " LIMIT 6 OFFSET 6 * (? - 1)";
         return jdbcTemplate.query(GET_PRODUCTS_OF_PAGE, new Object[]{pageId}, new ProductRowMapper());
     }
 
@@ -247,5 +254,27 @@ public class ProductRepository {
             filterStatement += "AND p.price > " + filters.getStartPriceRange() + "  AND p.price < " + filters.getEndPriceRange() + " ";
         }
         return filterStatement;
+    }
+
+    public String addSorting(String sortType) {
+        String sortStatement = "ORDER BY ";
+        switch (sortType) {
+            case "name":
+                sortStatement += "r.title ";
+                break;
+            case "price":
+                sortStatement += "r.price ";
+                break;
+            case "priceDesc":
+                sortStatement += "r.price DESC ";
+                break;
+            case "efficiency":
+                sortStatement += "r.efficiency ";
+                break;
+            default:
+                sortStatement = " ";
+                break;
+        }
+        return sortStatement;
     }
 }
