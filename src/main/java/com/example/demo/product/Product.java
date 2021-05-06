@@ -6,6 +6,7 @@ public abstract class Product {
     private Integer id;
     private String title;
     private String description;
+    private String image;
     private BigDecimal price;
     private String energyResource;
     private String accuracy;
@@ -17,6 +18,7 @@ public abstract class Product {
     public Product(Integer id,
                    String title,
                    String description,
+                   String image,
                    BigDecimal price,
                    String energyResource,
                    String accuracy,
@@ -24,6 +26,7 @@ public abstract class Product {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.image = image;
         this.price = price;
         this.energyResource = energyResource;
         this.accuracy = accuracy;
@@ -84,5 +87,13 @@ public abstract class Product {
 
     public void setTypeOfProduct(TypeOfProduct typeOfProduct) {
         this.typeOfProduct = typeOfProduct;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

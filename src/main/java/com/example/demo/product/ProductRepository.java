@@ -18,8 +18,8 @@ public class ProductRepository {
 
     public int addNewProduct(Product product) {
         String INSERT_PRODUCT_SQL = "INSERT INTO " +
-                "products (title, description, price, energy_resource, accuracy, type_of_product_id)" +
-                " VALUES (?,?,?,?,?,?)";
+                "products (title, description, image, price, energy_resource, accuracy, type_of_product_id)" +
+                " VALUES (?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -27,10 +27,11 @@ public class ProductRepository {
             PreparedStatement ps = connection.prepareStatement(INSERT_PRODUCT_SQL, new String[]{"product_id"});
             ps.setString(1, product.getTitle());
             ps.setString(2, product.getDescription());
-            ps.setBigDecimal(3, product.getPrice());
-            ps.setString(4, product.getEnergyResource());
-            ps.setString(5, product.getAccuracy());
-            ps.setInt(6, getProductTypeId(product.getTypeOfProduct().name()));
+            ps.setString(3, product.getImage());
+            ps.setBigDecimal(4, product.getPrice());
+            ps.setString(5, product.getEnergyResource());
+            ps.setString(6, product.getAccuracy());
+            ps.setInt(7, getProductTypeId(product.getTypeOfProduct().name()));
             return ps;
         }, keyHolder);
 

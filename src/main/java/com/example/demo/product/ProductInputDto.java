@@ -6,6 +6,7 @@ public class ProductInputDto {
     private Integer id;
     private String title;
     private String description;
+    private String image;
     private BigDecimal price;
     private BigDecimal efficiency;
     private String energyResource;
@@ -28,6 +29,7 @@ public class ProductInputDto {
     public ProductInputDto(Integer id,
                            String title,
                            String description,
+                           String image,
                            BigDecimal price,
                            BigDecimal efficiency,
                            String energyResource,
@@ -46,6 +48,7 @@ public class ProductInputDto {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.image = image;
         this.price = price;
         this.efficiency = efficiency;
         this.energyResource = energyResource;
@@ -207,23 +210,31 @@ public class ProductInputDto {
         this.efficiency = efficiency;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Product convertToTool() {
-        return new Tool(id, title, description, price, energyResource, accuracy, typeOfProduct);
+        return new Tool(id, title, description, image, price, energyResource, accuracy, typeOfProduct);
     }
 
     public Product convertToWorktable() {
-        return new Tool(id, title, description, price, energyResource, accuracy, typeOfProduct, toolType, consumable, rechargeable);
+        return new Tool(id, title, description, image, price, energyResource, accuracy, typeOfProduct, toolType, consumable, rechargeable);
     }
 
     public HydraulicWorktable convertToHydraulicWorktable() {
-        return new HydraulicWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
+        return new HydraulicWorktable(id, title, description, image, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
     }
 
     public LaserWorktable convertToLaserWorktable() {
-        return new LaserWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, cartridgeConsumes, cartridgeUsageTimes);
+        return new LaserWorktable(id, title, description, image, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, cartridgeConsumes, cartridgeUsageTimes);
     }
 
     public PlasmicWorktable convertToPlasmicWorktable() {
-        return new PlasmicWorktable(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, gasConsumes);
+        return new PlasmicWorktable(id, title, description, image, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit, gasConsumes);
     }
 }

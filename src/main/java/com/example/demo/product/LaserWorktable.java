@@ -10,6 +10,7 @@ public class LaserWorktable extends Worktable {
     public LaserWorktable(Integer id,
                           String title,
                           String description,
+                          String image,
                           BigDecimal price,
                           String energyResource,
                           String accuracy,
@@ -20,7 +21,7 @@ public class LaserWorktable extends Worktable {
                           BigDecimal timeConsumesForOneUnit,
                           BigDecimal cartridgeConsumes,
                           BigDecimal cartridgeUsageTimes) {
-        super(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
+        super(id, title, description, image, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
         this.cartridgeConsumes = cartridgeConsumes;
         this.cartridgeUsageTimes = cartridgeUsageTimes;
         countEfficiency();

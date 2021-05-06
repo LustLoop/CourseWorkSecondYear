@@ -9,6 +9,7 @@ public class PlasmicWorktable extends Worktable {
     public PlasmicWorktable(Integer id,
                             String title,
                             String description,
+                            String image,
                             BigDecimal price,
                             String energyResource,
                             String accuracy,
@@ -18,7 +19,7 @@ public class PlasmicWorktable extends Worktable {
                             BigDecimal electricityConsumes,
                             BigDecimal timeConsumesForOneUnit,
                             BigDecimal gasConsumes) {
-        super(id, title, description, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
+        super(id, title, description, image, price, energyResource, accuracy, typeOfProduct, worktableType, portable, electricityConsumes, timeConsumesForOneUnit);
         this.gasConsumes = gasConsumes;
         countEfficiency();
     }
