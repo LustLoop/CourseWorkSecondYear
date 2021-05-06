@@ -41,6 +41,16 @@ public class ProductController {
     }
 
     @CrossOrigin
+    @GetMapping("/countPages")
+    public int getNumberOfPages(@RequestParam(required = false)String title,
+                                @RequestParam(required = false) String[] types,
+                                @RequestParam(required = false) BigDecimal startPriceRange,
+                                @RequestParam(required = false) BigDecimal endPriceRange,
+                                @RequestParam String sortType) {
+        return productService.getNumberOfPages(new Filters(title, types, startPriceRange, endPriceRange), sortType);
+    }
+
+    @CrossOrigin
     @PostMapping
     public ProductInputDto addNewProduct(@RequestBody ProductInputDto productInputDto) {
         int productId = productService.addNewProduct(productInputDto);

@@ -207,6 +207,31 @@ public class ProductRepository {
         return jdbcTemplate.query(GET_PRODUCTS_OF_PAGE, new Object[]{pageId}, new ProductRowMapper());
     }
 
+    public int getNumberOfPages(Filters filters, String sortType) {
+        String GET_NUMBER_OF_PAGES = "SELECT COUNT(*) FROM (" +
+                "SELECT DISTINCT ON (p.product_id) * " +
+                "FROM products p " +
+                "         LEFT JOIN product_types pt " +
+                "                   ON pt.type_of_product_id = p.type_of_product_id " +
+                "         LEFT JOIN tools t " +
+                "                   ON p.type_of_product_id = 1 AND t.product_id = p.product_id " +
+                "         LEFT JOIN tool_types tt " +
+                "                   ON tt.tool_type_id = t.tool_type_id " +
+                "         LEFT JOIN worktables w " +
+                "                   ON p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN worktable_types wt " +
+                "                   ON wt.worktable_type_id = w.worktable_type_id " +
+                "         LEFT JOIN hydraulic_worktables hw " +
+                "                   ON w.worktable_type_id = 1 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN laser_worktables " +
+                "                   ON w.worktable_type_id = 2 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                "         LEFT JOIN plasmic_worktables " +
+                "                   ON w.worktable_type_id = 3 AND p.type_of_product_id = 2 AND w.product_id = p.product_id " +
+                addExistingFilters(filters) +
+                ") r ";
+        return jdbcTemplate.queryForObject(GET_NUMBER_OF_PAGES, Integer.class);
+    }
+
     public ProductInputDto getProductById(int input_id) {
         String GET_BY_ID = "SELECT DISTINCT ON (p.product_id) * " +
                 "FROM products p " +

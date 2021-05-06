@@ -30,6 +30,10 @@ public class ProductService {
         return productRepository.getProductsOfPage(pageId, filters, sortType);
     }
 
+    public int getNumberOfPages(Filters filters, String sortType) {
+        return productRepository.getNumberOfPages(filters, sortType);
+    }
+
     public void deleteProduct(int id) {
         productRepository.deleteProductById(id);
     }
